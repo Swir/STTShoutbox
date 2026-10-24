@@ -1,0 +1,87 @@
+STTShoutbox 2.3.0 — SWIRTV TEAM
+Otwórz START.html w przeglądarce — to krótki przewodnik dla początkujących.
+
+INSTALACJA W TRZECH KROKACH
+Przed instalacją zapisz kopię plików i bazy forum.
+1. Rozpakuj ZIP. Wgraj ZAWARTOŚĆ folderu Upload do katalogu forum
+   (tam, gdzie są index.php, inc i jscripts). Użyj menedżera plików
+   hostingu lub FTP/SFTP. Scal katalogi; nie usuwaj istniejącego inc!
+   Nie wgrywaj samego ZIP-a ani folderu o nazwie Upload.
+2. Panel administratora MyBB → Konfiguracja → Pluginy → STTShoutbox
+   → Zainstaluj i aktywuj. Czat przygotuje własne tabele i pojawi się
+   na stronie głównej standardowego forum MyBB.
+3. Przy pluginie kliknij „Szybki start — dopasuj czat”. Wybierz wygląd,
+   kolor, wysokość, kolejność wiadomości i dodatki. Zapisz i otwórz forum.
+Nie potrzebujesz innego shoutboxa, PluginLibrary ani konta bota.
+
+DOPASOWANIE
+Automatyczny wygląd rozpoznaje jasne lub ciemne tło przy otwarciu strony.
+Kolor przewodni wybierasz z palety. Przy tle obrazkowym/gradiencie wybierz
+Jasny lub Ciemny ręcznie. Szerokość dopasowuje się do kontenera forum.
+Wysokość: 240 px = kompaktowy, 360 = wygodny, 480 = duży (zakres 180–600).
+Klasyczny STT zachowuje niebieski wygląd 2.1; kolor z palety dotyczy
+pozostałych trybów. Zmiany zobaczysz po odświeżeniu strony forum.
+Kolory nicków i emotikony są pobierane z ustawień forum.
+
+AKTUALIZACJA Z 2.0 / 2.1 / 2.2
+Zrób kopię. Dezaktywuj plugin (nie odinstalowuj), wgraj wszystkie pliki
+z Upload, aktywuj ponownie i odśwież forum Ctrl+F5. Historia i ustawienia
+zostają zachowane. Wygląd aktualizacji pozostaje Klasyczny STT.
+
+USTAWIENIA ZAAWANSOWANE
+Link w Szybkim starcie lub Konfiguracja → Ustawienia → STTShoutbox.
+Tam ustawisz grupy, limity, blokady, podgląd administratora i bota.
+Pisanie wymaga zalogowania; dostęp respektuje uprawnienia forum i grup.
+Prywatne rozmowy czatu są oddzielne od PW MyBB i uwzględniają ustawienia
+prywatności uczestników. Autor może edytować/wycofać swoje wiadomości.
+Moderator czatu może wycofywać wiadomości publiczne. Dźwięk domyślnie OFF.
+
+BOT
+ID 0 = wirtualny STT Bot. Domyślnie ogłasza nowe tematy i odpowiedzi,
+rejestracje są wyłączone. Użytkownik widzi tylko zdarzenia z dostępnych
+mu działów. Działy z hasłem nie pokazują powiadomień. Wykluczenia działów
+obejmują poddziały. Bot nie odtwarza starych postów.
+Opcjonalne komendy: włącz automatyczne odpowiedzi i wpisz reguły,
+jedna na wiersz, np. !pomoc => Witaj na naszym forum!
+
+CZAT SIĘ NIE POJAWIŁ?
+1. Sprawdź stronę GŁÓWNĄ MyBB oraz aktywację pluginu.
+2. Sprawdź komplet plików. Lista pluginów i Szybki start pokazują braki.
+3. Sprawdź „Włącz STTShoutbox”, podgląd administratora i uprawnienia grup.
+4. Odśwież Ctrl+F5. Po imporcie standardowego motywu czat działa sam.
+5. Nietypowy szablon index musi mieć {$header} albo {$sttshoutbox}.
+   Jeżeli nie ma obu, poproś autora motywu o umieszczenie {$sttshoutbox}
+   w wybranym miejscu. Nie wstawiaj czatu drugi raz.
+6. Przy błędzie połączenia sprawdź, czy hosting/Cloudflare nie blokuje
+   xmlhttp.php. Nie wyłączaj ochrony całego forum.
+7. Emotikony graficzne dodaje się w Konfiguracja → Emotikony.
+   Wbudowana zakładka Emoji działa niezależnie.
+
+WYMAGANIA I TESTY
+MyBB 1.8, PHP 8.1+, MySQL/MariaDB, mbstring. Zalecane HTTPS.
+SQLite i PostgreSQL nie są obsługiwane.
+Testy 2.3: logika instalatora na PHP 8.5.12 z bazą zastąpioną pamięcią
+ testową; widoki jasny/ciemny i telefon w Chrome. Podstawa integracji:
+MyBB 1.8.41. Inne wersje PHP i nietypowe motywy sprawdź na kopii forum.
+
+HISTORIA, PRYWATNOŚĆ, USUWANIE
+Plugin zapisuje historię, w tym IP wiadomości publicznej; uwzględnij to
+w zasadach prywatności forum. Dezaktywacja zatrzymuje czat i usuwa
+znacznik dodany przez aktywację. Odinstalowanie usuwa ustawienia, lecz
+ZACHOWUJE historię. Nie usuwa całkowicie danych użytkowników.
+Pełne usunięcie tabel stt_messages, stt_dm, stt_rate, stt_hidden,
+stt_reactions, stt_events i stt_bot_replies wymaga osobnej operacji
+po zrobieniu kopii. Nie usuwaj tabel forum „na próbę”.
+Paczka nie zawiera migratora innych shoutboxów ani danych forum STT.
+
+Samodzielny kod STTShoutbox: SWIRTV TEAM. Licencja MIT: LICENSE.txt.
+MyBB to oddzielny projekt MyBB Group. Paczka nie zawiera cudzych motywów
+ani zestawów graficznych emotikonów. Sumy plików: SHA256SUMS.txt.
+
+JĘZYKI W WERSJI 2.3
+Czat i błędy używają języka ustalonego przez MyBB dla odwiedzającego.
+Panel startowy i ustawienia używają języka ACP. Polski i angielski są
+w paczce; inne języki korzystają z angielskiego wariantu zapasowego.
+Wtyczka nie instaluje całego polskiego pakietu MyBB. Własne wiadomości,
+nazwa czatu, nazwy działów/emotikonów i odpowiedzi bota nie są tłumaczone.
+Pliki językowe: inc/languages/{polish,english}/sttshoutbox.lang.php.

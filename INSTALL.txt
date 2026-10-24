@@ -1,0 +1,82 @@
+STTShoutbox 2.3.0 — SWIRTV TEAM
+Open START-EN.html in your browser for the beginner guide.
+
+INSTALL
+Back up your forum files and database first.
+1. Extract the release ZIP. Upload the CONTENTS of Upload into your
+   MyBB root directory, alongside index.php. Use the hosting file manager
+   or FTP/SFTP. Merge inc and jscripts; never delete their existing files.
+2. Admin CP → Configuration → Plugins → STTShoutbox → Install & Activate.
+3. Click Quick setup — customise your chat. Save your preferences and
+   open the forum homepage. No other shoutbox or bot account is needed.
+
+UPGRADE FROM 2.0 / 2.1 / 2.2
+Back up, deactivate the plugin, upload ALL files from Upload, activate
+again and hard-refresh the forum. Do not uninstall when updating.
+Existing settings/history stay intact. Existing sites keep Classic STT.
+Fresh installs use automatic appearance.
+
+LANGUAGE
+The chat follows the language MyBB resolves for the visitor. Quick setup
+and advanced settings follow the ACP language. Polish and English are
+included; other languages fall back to English. Translation files are
+inc/languages/{english,polish}/sttshoutbox.lang.php.
+This does not install MyBB's full Polish language pack. User content,
+forum names, smiley names and custom bot replies are not translated.
+
+APPEARANCE
+Automatic mode detects a light or dark background when the page loads.
+For image/gradient backgrounds, choose Light or Dark manually.
+Accent colour applies to Auto/Light/Dark; Classic keeps the old blue style.
+Height: 240 = compact, 360 = comfortable, 480 = large; range 180–600 px.
+Width follows the forum container. Refresh the forum after saving.
+Username colours and graphical smilies come from your forum settings.
+
+ADVANCED SETTINGS
+Use the link in Quick setup or Configuration → Settings → STTShoutbox.
+Configure groups, limits, flood delay, administrator preview and bot rules.
+Posting requires login. Forum/group access and privacy settings apply.
+Private chat is separate from MyBB PMs. Authors can edit/withdraw their
+own messages. Chat moderators can withdraw public messages. Sound is off
+by default and can be enabled by each visitor.
+
+BOT
+ID 0 = virtual STT Bot. New threads/replies are enabled by default;
+registration notifications are off. Activity cards are shown only to
+readers with access to their forum. Password-protected forums are excluded.
+Excluding a forum also excludes its subforums. Old posts are not backfilled.
+Optional responses: enable automatic responses and add one rule per line,
+for example: !help => Welcome to our community!
+
+TROUBLESHOOTING
+1. View the forum HOMEPAGE and check that the plugin is active.
+2. Check the upload path and complete file set. The plugin list and Quick
+   setup report missing files and server requirements.
+3. Check Enable STTShoutbox, administrator preview and reading groups.
+4. Refresh with Ctrl+F5. Imported standard themes work automatically.
+5. Custom index templates need {$header} or {$sttshoutbox}. If neither
+   exists, ask the theme author to insert {$sttshoutbox} once.
+6. For connection errors, check whether hosting/Cloudflare blocks
+   xmlhttp.php. Do not disable protection for the whole forum.
+7. Add graphical smilies under Configuration → Smilies. Unicode Emoji
+   works independently of the forum smiley collection.
+
+REQUIREMENTS
+MyBB 1.8; PHP 8.1+ and mbstring; MySQL/MariaDB. HTTPS recommended.
+SQLite/PostgreSQL are not supported. Integration based on MyBB 1.8.41.
+Release checks use PHP 8.5.12 and Chrome. Installer logic tests use an
+in-memory database double, not a full clean MyBB install. Test custom
+themes and other environments on a copy of your forum.
+
+DATA AND REMOVAL
+Public messages include the sender IP; account for this in your privacy
+policy. Deactivation stops chat and removes the activation-owned marker.
+Uninstall removes settings but KEEPS conversation history.
+Full data removal is separate: back up and deliberately remove the plugin
+tables stt_messages, stt_dm, stt_rate, stt_hidden, stt_reactions, stt_events,
+stt_bot_replies, with your own MyBB table prefix. Never remove core tables.
+This package includes no live forum data, credentials or migration tool.
+
+Independent STTShoutbox code: SWIRTV TEAM, MIT (LICENSE.txt).
+MyBB is a separate project by the MyBB Group.
+File checksums: SHA256SUMS.txt in the installation ZIP.
