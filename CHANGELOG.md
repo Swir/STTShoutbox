@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- The activity bot skips acknowledgement-only replies such as “dzięki”, “dziękuję bardzo”, “thanks” and common Polish/English variants, including simple formatting and emoji. New topics and substantive replies are unaffected.
+- Existing acknowledgement activity cards are omitted when read; forum posts, unlocking plugins and stored chat history are not deleted or modified.
+- Added 41 isolated regression checks covering classification, event creation, existing cards, new topics, excluded forums, moderation visibility and viewer permissions.
+
 ## 2.3.0 — 2026-10-24
 
 First release published in this repository.

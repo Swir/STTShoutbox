@@ -16,6 +16,25 @@ function stt_bot_shout($text){
  return (int)$db->insert_query('stt_messages',['uid'=>$uid,'text'=>$db->escape_string($text),'date'=>time(),'ipaddress'=>$db->escape_binary(my_inet_pton('127.0.0.1'))]);
 }
 
+/** Ignore acknowledgement-only replies, never substantive replies or new topics. */
+function stt_bot_thanks_only($message){
+ $text=(string)$message;
+ if($text===''||strlen($text)>1500)return false;
+ $text=html_entity_decode($text,ENT_QUOTES|ENT_HTML5,'UTF-8');
+ // Formatting may surround a thank-you. Quotes, links, code and hide tags remain
+ // significant so that a real contribution is not silently classified as thanks.
+ $text=preg_replace('~\[/?(?:b|i|u|s|color|size|font|align)(?:=[^\]\r\n]*)?\]~iu','',$text);
+ if($text===null)return false;
+ $text=mb_strtolower($text,'UTF-8');
+ $text=strtr($text,['ą'=>'a','ć'=>'c','ę'=>'e','ł'=>'l','ń'=>'n','ó'=>'o','ś'=>'s','ź'=>'z','ż'=>'z']);
+ $text=preg_replace('/[\p{P}\p{S}]+/u',' ',$text);
+ if($text===null)return false;
+ $text=trim((string)preg_replace('/[\s\p{Z}]+/u',' ',$text));
+ $polish='(?:(?:wielkie|serdeczne|ogromne|bardzo|serdecznie) )?(?:dzieki|dziekuje|dziekujemy)(?: (?:bardzo|serdecznie))?(?: za (?:udostepnienie|liste|konto|wstawke|material|pomoc|link|post|temat))?';
+ $english='(?:(?:many|big) )?(?:thanks|thank you|thank u|thx|ty)(?: (?:very much|a lot))?(?: for (?:sharing|the (?:list|link|post|account)))?';
+ return preg_match('/^(?:'.$polish.'|'.$english.')$/D',$text)===1;
+}
+
 function stt_bot_record($kind,$entity){
  global $db,$mybb;if(!stt_bot_enabled()||!in_array($kind,['thread','post','register'],true)||empty($mybb->settings['stt_bot_'.$kind]))return false;
  $entity=(int)$entity;if($entity<1)return false;$tid=$pid=$actor=0;
@@ -25,6 +44,7 @@ function stt_bot_record($kind,$entity){
   else{$p=get_post($entity);$t=$p?get_thread((int)$p['tid']):false;}
   if(!$p||!$t||(int)$t['visible']!==1||(int)$p['visible']!==1||str_starts_with((string)$t['closed'],'moved|')||stt_bot_ignore((int)$t['fid']))return false;
   if($kind==='post'&&(int)$p['pid']===(int)$t['firstpost'])return false;
+  if($kind==='post'&&stt_bot_thanks_only($p['message']??''))return false;
   $tid=(int)$t['tid'];$pid=(int)$p['pid'];$actor=(int)$p['uid'];
  }
  // Claim the exact event, never "the most recent post". Concurrent hooks cannot duplicate it.
@@ -65,7 +85,7 @@ function stt_event_card($event){
  global $mybb;$kind=$event['kind'];$actor=get_user((int)$event['actor']);$name=$actor['username']??stt_t('text_deleted_member_471af1');
  $actorHtml=format_name(htmlspecialchars_uni($name),(int)($actor['usergroup']??1),(int)($actor['displaygroup']??0));
  if($kind==='register')return ['kind'=>$kind,'label'=>stt_t('text_new_member_30631a'),'subject'=>$name,'forum'=>'','author'=>$name,'authorHtml'=>$actorHtml,'url'=>$mybb->settings['bburl'].'/'.get_profile_link((int)$event['actor'])];
- $t=get_thread((int)$event['tid']);$p=get_post((int)$event['pid']);if(!stt_event_visible($t,$p))return false;$f=get_forum((int)$t['fid']);
+ $t=get_thread((int)$event['tid']);$p=get_post((int)$event['pid']);if(!stt_event_visible($t,$p))return false;if($kind==='post'&&stt_bot_thanks_only($p['message']??''))return false;$f=get_forum((int)$t['fid']);
  $link=$kind==='thread'?get_thread_link((int)$t['tid']):get_post_link((int)$p['pid'],(int)$t['tid']).'#pid'.(int)$p['pid'];
  return ['kind'=>$kind,'label'=>$kind==='thread'?stt_t('text_new_thread_913b10'):stt_t('text_new_reply_298911'),'subject'=>$t['subject'],'forum'=>$f['name'],'author'=>$name,'authorHtml'=>$actorHtml,'url'=>rtrim($mybb->settings['bburl'],'/').'/'.$link];
 }
