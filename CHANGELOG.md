@@ -1,10 +1,16 @@
 # Changelog
 
-## Unreleased
+## 2.4.0 — 2026-10-26
 
-- The activity bot skips acknowledgement-only replies such as “dzięki”, “dziękuję bardzo”, “thanks” and common Polish/English variants, including simple formatting and emoji. New topics and substantive replies are unaffected.
-- Existing acknowledgement activity cards are omitted when read; forum posts, unlocking plugins and stored chat history are not deleted or modified.
-- Added 41 isolated regression checks covering classification, event creation, existing cards, new topics, excluded forums, moderation visibility and viewer permissions.
+- Dedicated **Activity bot** page in Admin CP → Configuration → Plugins → STTShoutbox, also linked from Quick setup. Notification types, forum exclusions and filters can be configured together in Polish or English.
+- Independent on/off switches for thank-you phrases and short replies. Defaults: both enabled, complete-word/phrase matching anywhere, minimum 10 words, replies only.
+- Editable thank-you phrases; optional acknowledgement-only matching. Matching ignores letter case and folds Polish accents without matching fragments inside longer words.
+- Optional filtering of first posts in new topics; optional links/attachments exemption from the short-post filter; optional filtering of previously recorded activity cards. The link/attachment exemption is off and existing-card filtering is on by default.
+- A tester evaluates the current unsaved form settings, notification switches and sample content, reporting the word count and reasons without saving or publishing anything.
+- Quoted content is excluded from classification. URLs, code and media are not counted as prose; text inside hide tags is counted. Permissions and excluded forums continue to control real activity cards.
+- Filters affect activity notifications only. Forum posts, thank-you/unlock behaviour and conversation history are preserved. Recorded cards can reappear when their filter is disabled; notifications skipped at creation are not backfilled.
+- Included the private-message unread indicator previously deployed on the STT forum: dot and badge, collapsed-header alert, unread-first conversation list and read acknowledgements only when messages are visible. Polish and English support is retained.
+- Added installation and bot configuration guides in both languages. Upgrade adds settings without resetting existing configuration or migrating conversation tables.
 
 ## 2.3.0 — 2026-10-24
 

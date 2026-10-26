@@ -1,4 +1,4 @@
-STTShoutbox 2.3.0 — SWIRTV TEAM
+STTShoutbox 2.4.0 — SWIRTV TEAM
 Otwórz START.html w przeglądarce — to krótki przewodnik dla początkujących.
 
 INSTALACJA W TRZECH KROKACH
@@ -23,10 +23,12 @@ Klasyczny STT zachowuje niebieski wygląd 2.1; kolor z palety dotyczy
 pozostałych trybów. Zmiany zobaczysz po odświeżeniu strony forum.
 Kolory nicków i emotikony są pobierane z ustawień forum.
 
-AKTUALIZACJA Z 2.0 / 2.1 / 2.2
+AKTUALIZACJA Z 2.0 / 2.1 / 2.2 / 2.3
 Zrób kopię. Dezaktywuj plugin (nie odinstalowuj), wgraj wszystkie pliki
 z Upload, aktywuj ponownie i odśwież forum Ctrl+F5. Historia i ustawienia
-zostają zachowane. Wygląd aktualizacji pozostaje Klasyczny STT.
+zostają zachowane razem z wybranym wyglądem. Wersja 2.4.0 dodaje ustawienia
+filtrów; po aktualizacji otwórz Bot aktywności i sprawdź ich wartości.
+Wgraj cały folder Upload, nie tylko główny plik PHP.
 
 USTAWIENIA ZAAWANSOWANE
 Link w Szybkim starcie lub Konfiguracja → Ustawienia → STTShoutbox.
@@ -37,12 +39,38 @@ prywatności uczestników. Autor może edytować/wycofać swoje wiadomości.
 Moderator czatu może wycofywać wiadomości publiczne. Dźwięk domyślnie OFF.
 
 BOT
+Otwórz Konfiguracja → Pluginy → STTShoutbox → Bot aktywności albo link
+w Szybkim starcie. Panel zbiera przełączniki bota, wykluczenia i filtry.
 ID 0 = wirtualny STT Bot. Domyślnie ogłasza nowe tematy i odpowiedzi,
 rejestracje są wyłączone. Użytkownik widzi tylko zdarzenia z dostępnych
 mu działów. Działy z hasłem nie pokazują powiadomień. Wykluczenia działów
 obejmują poddziały. Bot nie odtwarza starych postów.
+Filtry podziękowań i krótkich postów mają osobne przełączniki. Oba są
+domyślnie włączone; minimum wynosi 10 słów (9 pomijane, 10 przechodzi).
+Domyślna lista: dzięki, dziękuję, dziękujemy, thanks, thank you, thx.
+Wpisz jedną frazę w wierszu. Dopasowanie całych słów/fraz pomija wielkość
+liter i polskie znaki; domyślnie szuka ich w dowolnym miejscu odpowiedzi.
+Możesz wybrać tryb pomijania tylko samych podziękowań.
+Domyślnie filtry obejmują odpowiedzi, opcjonalnie także nowe tematy.
+Wyjątek dla linków i załączników (także niewstawionych do treści) jest
+domyślnie wyłączony i dotyczy tylko limitu słów. Filtrowanie istniejących
+kart jest włączone.
+Tester sprawdza także niezapisane ustawienia formularza; pokazuje decyzję,
+liczbę słów i powody, bez zapisywania ustawień lub publikowania postu.
+Cytaty są pomijane. Adresy, kod i multimedia nie są liczone jako słowa;
+tekst w znacznikach hide jest liczony.
+Filtry ograniczają tylko powiadomienia. Posty, podziękowania, odsłanianie
+treści i historia czatu pozostają. Wyłączenie filtra może odsłonić już
+zapisane karty; nie odtwarza powiadomień pominiętych przy dodawaniu postu.
+Szczegóły i przykłady: docs/BOT-AKTYWNOSCI.md.
 Opcjonalne komendy: włącz automatyczne odpowiedzi i wpisz reguły,
 jedna na wiersz, np. !pomoc => Witaj na naszym forum!
+
+NIEPRZECZYTANE ROZMOWY PRYWATNE
+Kropka i licznik wskazują nowe wiadomości na zakładce Prywatne i w
+zwiniętym nagłówku. Rozmowy z nowymi wiadomościami są pierwsze na liście.
+Odczyt jest potwierdzany dopiero, gdy rozmowa i najnowsza wiadomość są
+rzeczywiście widoczne.
 
 CZAT SIĘ NIE POJAWIŁ?
 1. Sprawdź stronę GŁÓWNĄ MyBB oraz aktywację pluginu.
@@ -60,8 +88,7 @@ CZAT SIĘ NIE POJAWIŁ?
 WYMAGANIA I TESTY
 MyBB 1.8, PHP 8.1+, MySQL/MariaDB, mbstring. Zalecane HTTPS.
 SQLite i PostgreSQL nie są obsługiwane.
-Testy 2.3: logika instalatora na PHP 8.5.12 z bazą zastąpioną pamięcią
- testową; widoki jasny/ciemny i telefon w Chrome. Podstawa integracji:
+Testy instalatora używają bazy zastąpionej pamięcią testową. Podstawa integracji:
 MyBB 1.8.41. Inne wersje PHP i nietypowe motywy sprawdź na kopii forum.
 
 HISTORIA, PRYWATNOŚĆ, USUWANIE
@@ -78,7 +105,7 @@ Samodzielny kod STTShoutbox: SWIRTV TEAM. Licencja MIT: LICENSE.txt.
 MyBB to oddzielny projekt MyBB Group. Paczka nie zawiera cudzych motywów
 ani zestawów graficznych emotikonów. Sumy plików: SHA256SUMS.txt.
 
-JĘZYKI W WERSJI 2.3
+JĘZYKI
 Czat i błędy używają języka ustalonego przez MyBB dla odwiedzającego.
 Panel startowy i ustawienia używają języka ACP. Polski i angielski są
 w paczce; inne języki korzystają z angielskiego wariantu zapasowego.

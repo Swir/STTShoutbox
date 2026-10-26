@@ -139,3 +139,16 @@
 #stt-chat.stt-adaptive .stt-event-tag{background:var(--stt-card);color:var(--stt-link);border-color:var(--stt-line)}
 #stt-chat.stt-adaptive :is(.stt-send,.stt-new,.stt-unread),#stt-chat.stt-adaptive .stt-send:hover:not(:disabled){background:var(--stt-accent);color:var(--stt-on-accent);border-color:var(--stt-accent)}
 @media(max-width:760px){#stt-chat.stt-adaptive .stt-message-actions{background:transparent;border:0}}
+
+/* Private message attention: visible in the conversation tab and collapsed header. */
+#stt-chat .stt-tab.has-unread{display:inline-flex;align-items:center;gap:6px;background:#164361!important;color:#e7f7ff!important;box-shadow:inset 0 -2px #69d8ff,0 0 12px #46c9ff24!important}
+#stt-chat .stt-unread-dot{display:inline-block;flex:none;width:7px;height:7px;border-radius:50%;background:#8ce7ff;box-shadow:0 0 5px #65d9ff,0 0 11px #65d9ff80;animation:stt-unread-glow 2.8s ease-in-out infinite}
+#stt-chat .stt-unread-badge,#stt-chat .stt-person.has-unread .stt-unread{display:inline-flex;justify-content:center;align-items:center;min-width:18px;min-height:18px;padding:0 5px;border-radius:9px;background:#9beaff!important;color:#082a40!important;font-size:10px;font-weight:800;line-height:1.6}
+#stt-chat .stt-person.has-unread{background:#1b80b51a;box-shadow:inset 2px 0 #56caff}
+#stt-chat .stt-person .stt-nick{min-width:0;overflow-wrap:anywhere}
+#stt-chat .stt-dm-alert{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex:none;min-height:25px;padding:2px 7px;border:1px solid #99e8ff80!important;border-radius:5px;background:#062e4c!important;color:#c5f5ff!important;font-size:11px;font-weight:750;white-space:nowrap;box-shadow:0 0 10px #70d9ff30}
+#stt-chat .stt-dm-alert:hover{background:#124c70!important}
+#stt-chat .stt-dm-status{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@keyframes stt-unread-glow{0%,100%{box-shadow:0 0 4px #65d9ff,0 0 8px #65d9ff55}50%{box-shadow:0 0 7px #9ceaff,0 0 13px #65d9ff99}}
+@media(prefers-reduced-motion:reduce){#stt-chat .stt-unread-dot{animation:none}}
+@media(max-width:500px){#stt-chat .stt-dm-alert{font-size:10px;padding:2px 5px;gap:4px}#stt-chat .stt-head:has(.stt-dm-alert:not([hidden])) .stt-status{display:none}#stt-chat .stt-tab.has-unread{gap:4px}}

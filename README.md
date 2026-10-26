@@ -2,7 +2,7 @@
 
 An independent shoutbox for **MyBB 1.8**, built by **SWIRTV TEAM**. Public chat, private conversations, forum activity notifications and a beginner-friendly setup page — in **English and Polish**.
 
-[Polski / Polish](README.pl.md) · [Download a release](https://github.com/Swir/STTShoutbox/releases) · [Installation guide](INSTALL.txt)
+[Polski / Polish](README.pl.md) · [Download 2.4.0](https://github.com/Swir/STTShoutbox/releases/tag/v2.4.0) · [Installation guide](INSTALL.txt) · [Activity bot guide](docs/ACTIVITY-BOT.md)
 
 ![English chat preview with demonstration messages](docs/screenshots/chat-en.png)
 
@@ -10,7 +10,7 @@ An independent shoutbox for **MyBB 1.8**, built by **SWIRTV TEAM**. Public chat,
 
 Back up your forum files and database first.
 
-1. Download the `STTShoutbox-2.3.0.zip` release asset and extract it. Upload the **contents** of `Upload` into the MyBB root directory, alongside `index.php`. Merge the `inc` and `jscripts` directories; do not delete their existing contents.
+1. Download the `STTShoutbox-2.4.0.zip` release asset and extract it. Upload the **contents** of `Upload` into the MyBB root directory, alongside `index.php`. Merge the `inc` and `jscripts` directories; do not delete their existing contents.
 2. Open **Admin CP → Configuration → Plugins → STTShoutbox → Install & Activate**.
 3. Click **Quick setup — customise your chat** beside the plugin. Choose the appearance, accent colour, height and message order, then save.
 
@@ -22,7 +22,9 @@ The chat appears on the forum homepage. No other shoutbox, PluginLibrary or sepa
 - Username colours and smilies from your forum, plus a Unicode emoji picker.
 - Mentions, replies, reactions, own-message editing and withdrawal.
 - Private conversations, separate from MyBB PMs, respecting participant privacy settings.
+- An unread-message dot and count on the private tab and collapsed header, with unread conversations listed first. Messages are marked read when the conversation is actually visible.
 - Built-in bot for new threads, replies and optional member registrations. Activity cards are filtered according to each reader's forum permissions; password-protected forums are excluded.
+- Independent thank-you and short-post filters, configurable phrases and word threshold, optional exemptions, and an ACP tester that evaluates examples without publishing them.
 - Custom bot responses, optional sound, expandable and collapsible chat.
 - Automatic light/dark detection, explicit light/dark palettes, accent picker, adjustable height and spacing.
 - Quick setup, missing-file diagnostics and automatic placement for standard MyBB index templates.
@@ -38,9 +40,20 @@ Language files:
 
 The plugin does not install or replace MyBB's full language packs. Install the standard Polish MyBB pack if you want Polish as a selectable forum language. Messages, forum names, custom chat names, smiley names and administrator-authored bot replies are user content and are not machine-translated.
 
-## Upgrade from 2.0, 2.1 or 2.2
+## Configure the activity bot
 
-Back up first. **Deactivate**, upload every file in `Upload`, then activate again and hard-refresh the forum. **Do not uninstall to update.** Existing conversation history and settings are retained. Existing installations keep the classic appearance; fresh installations default to automatic appearance.
+Open **Admin CP → Configuration → Plugins → STTShoutbox → Activity bot**, or use the link in Quick setup. Switch notification types on/off, exclude forums, and configure the two independent filters:
+
+- **Thank-you filter:** enabled by default, matching complete words or phrases anywhere in a reply. Edit the phrase list or choose acknowledgement-only matching.
+- **Short-post filter:** enabled by default with a minimum of **10 words**. Nine words are skipped; exactly ten pass this filter.
+
+The filters apply to replies by default; you can include new topics too. The optional link/attachment exemption is off by default and affects the short-post filter only. Filtering existing activity cards is on by default. The **tester** uses the values currently entered in the form, including unsaved changes, and explains its decision and word count without saving settings or creating a post.
+
+These rules affect bot notifications. Forum posts, thanks/unlock plugins, chat messages and private conversations remain intact. See the [full bot guide](docs/ACTIVITY-BOT.md) for phrase matching, word counting and existing-history behaviour.
+
+## Upgrade from 2.0–2.3
+
+Back up first. **Deactivate**, upload every file in `Upload`, then activate again and hard-refresh the forum. **Do not uninstall to update.** Existing conversation history, settings and chosen appearance are retained; fresh installations default to automatic appearance. Version 2.4.0 adds the new filter settings with the defaults above. Review them in **Activity bot** after updating.
 
 ## Requirements and limits
 

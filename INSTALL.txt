@@ -1,4 +1,4 @@
-STTShoutbox 2.3.0 — SWIRTV TEAM
+STTShoutbox 2.4.0 — SWIRTV TEAM
 Open START-EN.html in your browser for the beginner guide.
 
 INSTALL
@@ -10,11 +10,12 @@ Back up your forum files and database first.
 3. Click Quick setup — customise your chat. Save your preferences and
    open the forum homepage. No other shoutbox or bot account is needed.
 
-UPGRADE FROM 2.0 / 2.1 / 2.2
+UPGRADE FROM 2.0 / 2.1 / 2.2 / 2.3
 Back up, deactivate the plugin, upload ALL files from Upload, activate
 again and hard-refresh the forum. Do not uninstall when updating.
-Existing settings/history stay intact. Existing sites keep Classic STT.
-Fresh installs use automatic appearance.
+Existing settings, history and selected appearance stay intact.
+Fresh installs use automatic appearance. Version 2.4.0 adds filter settings;
+review Activity bot after updating. Do not upload only the main PHP file.
 
 LANGUAGE
 The chat follows the language MyBB resolves for the visitor. Quick setup
@@ -41,12 +42,36 @@ own messages. Chat moderators can withdraw public messages. Sound is off
 by default and can be enabled by each visitor.
 
 BOT
+Open Configuration → Plugins → STTShoutbox → Activity bot, or use the link
+in Quick setup. This page groups bot switches, forum exclusions and filters.
 ID 0 = virtual STT Bot. New threads/replies are enabled by default;
 registration notifications are off. Activity cards are shown only to
 readers with access to their forum. Password-protected forums are excluded.
 Excluding a forum also excludes its subforums. Old posts are not backfilled.
+Thank-you and short-post filters have independent on/off switches; both
+are on by default. The minimum is 10 words: nine are skipped, ten pass.
+The default phrase list is: dzięki, dziękuję, dziękujemy, thanks, thank you,
+thx. Enter one phrase per line. Matching uses complete words/phrases,
+ignores case and Polish accents, and defaults to finding a phrase anywhere.
+You can choose acknowledgement-only matching instead.
+By default, filters cover replies. Optionally include new topics. Links
+and attachments, including those not embedded in the post, can bypass the
+short-post filter only; this option is off by default. Existing-card
+filtering is on.
+The tester uses the form's current unsaved settings and shows a decision,
+word count and reasons without saving anything or creating a post. Quotes
+are excluded; URLs/code/media are not prose; hide-tag bodies are counted.
+Filters suppress activity notices only. Forum posts, thanks/unlock plugins
+and chat history are preserved. Disabling filters can reveal existing
+recorded cards; it does not create notifications that were skipped earlier.
+Full details and examples: docs/ACTIVITY-BOT.md.
 Optional responses: enable automatic responses and add one rule per line,
 for example: !help => Welcome to our community!
+
+PRIVATE UNREAD INDICATOR
+A dot and count show new private messages on the private tab and in the
+collapsed header. Unread conversations appear first. Messages are marked
+read when their conversation and newest message are actually visible.
 
 TROUBLESHOOTING
 1. View the forum HOMEPAGE and check that the plugin is active.

@@ -31,6 +31,9 @@ function my_inet_pton($s){return inet_pton($s);}
 function stt_t($key){return $key;}
 $db=new BotDbDouble;
 $mybb=(object)['settings'=>['stt_enabled'=>1,'stt_bot_enabled'=>1,'stt_bot_post'=>1,'stt_bot_thread'=>1,'stt_bot_ignore'=>'','bburl'=>'https://example.test'],'user'=>['uid'=>1],'binary_fields'=>[]];
+// Legacy acknowledgement-only mode remains available alongside the new defaults.
+$mybb->settings['stt_bot_filter_short']='0';
+$mybb->settings['stt_bot_filter_mode']='only';
 $canView=true;
 $thread=['tid'=>13011,'firstpost'=>10,'fid'=>82,'uid'=>1,'visible'=>1,'closed'=>'','subject'=>'Test topic'];
 $posts=[10=>['pid'=>10,'tid'=>13011,'uid'=>1,'visible'=>1,'message'=>'[hide]A new contribution[/hide]'],11=>['pid'=>11,'tid'=>13011,'uid'=>2788,'visible'=>1,'message'=>'dzięki'],12=>['pid'=>12,'tid'=>13011,'uid'=>2788,'visible'=>1,'message'=>'Dzięki, ale lista nie działa.']];

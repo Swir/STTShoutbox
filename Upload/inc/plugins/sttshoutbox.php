@@ -2,13 +2,15 @@
 /** STTShoutbox — SWIRTV TEAM, 2026. Independent MyBB plugin; its own storage, permissions and bot. */
 if(!defined('IN_MYBB')) die('Direct access is not allowed.');
 // Incomplete uploads must not break the forum or the plugin list.
-$sttFilesReady=is_file(__DIR__.'/sttshoutbox/i18n.php')&&is_file(__DIR__.'/sttshoutbox/bot.php')&&is_file(__DIR__.'/sttshoutbox/setup.php')&&is_file(__DIR__.'/sttshoutbox/service.php');
+$sttFilesReady=is_file(__DIR__.'/sttshoutbox/i18n.php')&&is_file(__DIR__.'/sttshoutbox/bot.php')&&is_file(__DIR__.'/sttshoutbox/filters.php')&&is_file(__DIR__.'/sttshoutbox/bot-admin.php')&&is_file(__DIR__.'/sttshoutbox/setup.php')&&is_file(__DIR__.'/sttshoutbox/service.php');
 if($sttFilesReady){
 require_once __DIR__.'/sttshoutbox/i18n.php';
 $plugins->add_hook('admin_load','stt_admin_language');
 require_once __DIR__.'/sttshoutbox/bot.php';
 require_once __DIR__.'/sttshoutbox/setup.php';
+require_once __DIR__.'/sttshoutbox/bot-admin.php';
 $plugins->add_hook('admin_config_plugins_begin','stt_setup_admin');
+$plugins->add_hook('admin_config_plugins_begin','stt_bot_admin');
 $plugins->add_hook('datahandler_post_insert_thread_end','stt_bot_thread');
 $plugins->add_hook('datahandler_post_insert_post_end','stt_bot_post');
 $plugins->add_hook('member_do_register_end','stt_bot_register');
@@ -20,7 +22,8 @@ function sttshoutbox_info(){
  if(function_exists('stt_setup_requirements')){$issues=stt_setup_requirements();if($issues)$description.='<br><strong>'.htmlspecialchars_uni(implode(' ',$issues)).'</strong>';}
  else $description.=(function_exists('stt_t')?stt_t('text_incomplete_package_upload_the_entire_inc_plugins_stt_fec9f9'):'<br><strong>Incomplete package: upload the entire inc/plugins/sttshoutbox folder from Upload.</strong>');
  if(defined('IN_ADMINCP')&&function_exists('stt_t')&&sttshoutbox_is_installed())$description.=stt_t('text_quick_setup_customise_your_chat_after_activation_3bafe5');
- return ['name'=>'STTShoutbox','description'=>$description,'website'=>'https://swirtvteam.info/','author'=>'SWIRTV TEAM','authorsite'=>'https://swirtvteam.info/','version'=>'2.3.0','compatibility'=>'18*'];
+ if(defined('IN_ADMINCP')&&function_exists('stt_t')&&sttshoutbox_is_installed())$description.='<br><a href="index.php?module=config-plugins&amp;action=sttshoutbox_bot"><strong>'.htmlspecialchars_uni(stt_t('bot_panel_link')).'</strong></a>';
+ return ['name'=>'STTShoutbox','description'=>$description,'website'=>'https://swirtvteam.info/','author'=>'SWIRTV TEAM','authorsite'=>'https://swirtvteam.info/','version'=>'2.4.0','compatibility'=>'18*'];
 }
 function sttshoutbox_preflight(){
  $issues=function_exists('stt_setup_requirements')?stt_setup_requirements():[(function_exists('stt_t')?stt_t('text_incomplete_package_upload_the_contents_of_upload_to__b1ec3c'):'Incomplete package. Upload the contents of Upload to the forum directory.')];
@@ -47,7 +50,7 @@ function sttshoutbox_install(){
  sttshoutbox_upgrade_22($fresh);
 }
 function sttshoutbox_activate(){
- sttshoutbox_install();sttshoutbox_upgrade_20();sttshoutbox_upgrade_21();
+ sttshoutbox_install();sttshoutbox_upgrade_20();sttshoutbox_upgrade_21();sttshoutbox_upgrade_24();
  require_once MYBB_ROOT.'inc/adminfunctions_templates.php';
  find_replace_templatesets('index','#(\{\$header\})(?![\s\S]*\{\$sttshoutbox\})#','$1<!-- STTShoutbox:start -->{$sttshoutbox}<!-- STTShoutbox:end -->');
 }
@@ -68,7 +71,7 @@ function sttshoutbox_render(){
  $templates->cache['index']=stt_setup_place($templates->cache['index']);
  $cfg=json_encode($appearance+['locale'=>stt_language()==='polish'?'pl-PL':'en-GB','i18n'=>stt_ui_dictionary(),'endpoint'=>$base.'/xmlhttp.php?action=sttshoutbox','csrf'=>$mybb->post_code,'uid'=>(int)$mybb->user['uid'],'name'=>$mybb->user['username'],'write'=>stt_write(),'private'=>stt_pm_allowed(),'moderator'=>stt_mod(),'interval'=>max(5,(int)($mybb->settings['stt_interval']??7)),'limit'=>stt_limit(),'order'=>($mybb->settings['stt_order']??'newest'),'timeOffset'=>(float)($mybb->user['timezone']??$mybb->settings['timezoneoffset']??0)+(float)($mybb->user['dst']??$mybb->settings['dstcorrection']??0),'preview'=>!empty($mybb->settings['stt_preview']),'profile'=>$base.'/member.php?action=profile&uid='],JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT);
  $url=htmlspecialchars_uni($base);
- $sttshoutbox='<link rel="stylesheet" href="'.$url.stt_t('text_jscripts_sttshoutbox_css_v_2_2_0_loading_sttshoutbox_a47f6d').$cfg.'</script><script defer src="'.$url.'/jscripts/sttshoutbox.js?v=2.3.0"></script>';
+ $sttshoutbox='<link rel="stylesheet" href="'.$url.'/jscripts/sttshoutbox.css?v=2.4.0"><section id="stt-chat" aria-label="STTShoutbox"><div class="stt-loading">'.htmlspecialchars_uni(stt_t('bot_chat_loading')).'</div></section><script type="application/json" id="stt-config">'.$cfg.'</script><script defer src="'.$url.'/jscripts/sttshoutbox.js?v=2.4.0"></script>';
 }
 function sttshoutbox_api(){
  global $mybb;

@@ -2,7 +2,7 @@
 
 Samodzielny shoutbox dla **MyBB 1.8**, autorstwa **SWIRTV TEAM**, dostępny po **polsku i angielsku**.
 
-[English](README.md) · [Pobierz wydanie](https://github.com/Swir/STTShoutbox/releases) · [Pełna instrukcja](INSTALACJA.txt)
+[English](README.md) · [Pobierz 2.4.0](https://github.com/Swir/STTShoutbox/releases/tag/v2.4.0) · [Pełna instrukcja](INSTALACJA.txt) · [Instrukcja bota](docs/BOT-AKTYWNOSCI.md)
 
 ![Polski interfejs z przykładowymi wiadomościami](docs/screenshots/chat-pl.png)
 
@@ -10,7 +10,7 @@ Samodzielny shoutbox dla **MyBB 1.8**, autorstwa **SWIRTV TEAM**, dostępny po *
 
 Najpierw zrób kopię plików i bazy forum.
 
-1. Pobierz `STTShoutbox-2.3.0.zip` z wydań i rozpakuj. Wgraj **zawartość folderu Upload** do katalogu MyBB, obok `index.php`. Scal katalogi `inc` i `jscripts`; nie usuwaj ich istniejącej zawartości.
+1. Pobierz `STTShoutbox-2.4.0.zip` z wydań i rozpakuj. Wgraj **zawartość folderu Upload** do katalogu MyBB, obok `index.php`. Scal katalogi `inc` i `jscripts`; nie usuwaj ich istniejącej zawartości.
 2. **ACP → Konfiguracja → Pluginy → STTShoutbox → Zainstaluj i aktywuj**.
 3. Kliknij **Szybki start — dopasuj czat**, wybierz wygląd i zapisz.
 
@@ -19,9 +19,11 @@ Czat pojawi się na stronie głównej standardowego forum. Nie wymaga innego sho
 ## Możliwości
 
 - Czat ogólny, rozmowy prywatne, kolorowe nicki, emotikony i emoji.
+- Świecąca kropka i licznik nieprzeczytanych rozmów prywatnych, także w zwiniętym nagłówku. Rozmowy z nowymi wiadomościami są na początku; odczyt następuje dopiero po faktycznym wyświetleniu wiadomości.
 - Wzmianki, cytowanie, reakcje, edycja i wycofywanie własnych wiadomości.
 - Własny bot: nowe tematy, odpowiedzi, opcjonalnie rejestracje oraz własne odpowiedzi na komendy.
 - Powiadomienia bota respektują dostęp odbiorcy do działów; działy z hasłem są pomijane.
+- Osobne filtry podziękowań i krótkich postów, własna lista słów, regulowany limit oraz tester przykładów w ACP bez publikowania postów.
 - Wiadomości od najnowszych lub najstarszych, limity i uprawnienia grup.
 - Automatyczny jasny/ciemny wygląd, kolor przewodni, wysokość i odstępy.
 - Prosty panel startowy, sprawdzanie plików i pomoc w razie problemów.
@@ -32,9 +34,20 @@ Interfejs czatu i błędy używają języka ustalonego przez MyBB dla danego odw
 
 Tłumaczenia są w `Upload/inc/languages/polish/sttshoutbox.lang.php` i `english/sttshoutbox.lang.php`. Wtyczka nie instaluje całego polskiego pakietu MyBB. Własne wiadomości, nazwa czatu, działy, nazwy emotikonów i odpowiedzi bota nie są tłumaczone automatycznie.
 
-## Aktualizacja
+## Ustawienia bota aktywności
 
-Zrób kopię, **dezaktywuj** wtyczkę, wgraj wszystkie pliki z Upload, aktywuj ponownie i odśwież forum. Nie odinstalowuj przy aktualizacji. Historia i dotychczasowe ustawienia zostają zachowane, podobnie jak klasyczny wygląd istniejącej instalacji.
+Otwórz **ACP → Konfiguracja → Pluginy → STTShoutbox → Bot aktywności** albo link w Szybkim starcie. W jednym panelu wybierzesz rodzaje powiadomień, pomijane działy i dwa niezależne filtry:
+
+- **Podziękowania:** domyślnie włączony, dopasowuje całe słowa lub frazy w dowolnym miejscu odpowiedzi. Możesz zmienić listę albo wybrać tryb samych podziękowań.
+- **Krótkie posty:** domyślnie włączony, minimum **10 słów**. Dziewięć słów jest pomijane; dokładnie dziesięć przechodzi ten filtr.
+
+Domyślnie reguły obejmują odpowiedzi; możesz rozszerzyć je na nowe tematy. Wyjątek dla linków i załączników jest początkowo wyłączony i dotyczy tylko limitu słów. Filtrowanie zapisanych wcześniej kart aktywności jest domyślnie włączone. **Tester** sprawdza aktualne wartości formularza, również niezapisane, i podaje liczbę słów oraz powody decyzji. Nie zapisuje ustawień ani nie dodaje postu.
+
+Filtry dotyczą powiadomień bota. Posty forum, podziękowania, odsłanianie treści i historia rozmów pozostają zachowane. Szczegóły liczenia słów i działania historii znajdziesz w [instrukcji bota](docs/BOT-AKTYWNOSCI.md).
+
+## Aktualizacja z 2.0–2.3
+
+Zrób kopię, **dezaktywuj** wtyczkę, wgraj wszystkie pliki z Upload, aktywuj ponownie i odśwież forum. Nie odinstalowuj przy aktualizacji. Historia, dotychczasowe ustawienia i wybrany wygląd zostają zachowane. Wersja 2.4.0 dodaje nowe ustawienia filtrów z wartościami opisanymi powyżej. Po aktualizacji sprawdź panel **Bot aktywności**.
 
 ## Wymagania i sprawdzenie
 
