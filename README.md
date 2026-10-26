@@ -2,7 +2,7 @@
 
 An independent shoutbox for **MyBB 1.8**, built by **SWIRTV TEAM**. Public chat, private conversations, forum activity notifications and a beginner-friendly setup page — in **English and Polish**.
 
-[Polski / Polish](README.pl.md) · [Download 2.4.0](https://github.com/Swir/STTShoutbox/releases/tag/v2.4.0) · [Installation guide](INSTALL.txt) · [Activity bot guide](docs/ACTIVITY-BOT.md)
+[Polski / Polish](README.pl.md) · [Download 2.5.0](https://github.com/Swir/STTShoutbox/releases/tag/v2.5.0) · [Installation guide](INSTALL.txt) · [Activity bot guide](docs/ACTIVITY-BOT.md)
 
 ![English chat preview with demonstration messages](docs/screenshots/chat-en.png)
 
@@ -10,9 +10,9 @@ An independent shoutbox for **MyBB 1.8**, built by **SWIRTV TEAM**. Public chat,
 
 Back up your forum files and database first.
 
-1. Download the `STTShoutbox-2.4.0.zip` release asset and extract it. Upload the **contents** of `Upload` into the MyBB root directory, alongside `index.php`. Merge the `inc` and `jscripts` directories; do not delete their existing contents.
+1. Download the `STTShoutbox-2.5.0.zip` release asset and extract it. Upload the **contents** of `Upload` into the MyBB root directory, alongside `index.php`. Merge the `inc` and `jscripts` directories, including the new `jscripts/sttshoutbox` sound folder; do not delete their existing contents.
 2. Open **Admin CP → Configuration → Plugins → STTShoutbox → Install & Activate**.
-3. Click **Quick setup — customise your chat** beside the plugin. Choose the appearance, accent colour, height and message order, then save.
+3. Click **Appearance & setup** beside the plugin. Choose the appearance, accent colour, height and message order, then save.
 
 The chat appears on the forum homepage. No other shoutbox, PluginLibrary or separate bot account is required. The ZIP includes an offline `START-EN.html` guide and a Polish `START.html` guide.
 
@@ -25,7 +25,8 @@ The chat appears on the forum homepage. No other shoutbox, PluginLibrary or sepa
 - An unread-message dot and count on the private tab and collapsed header, with unread conversations listed first. Messages are marked read when the conversation is actually visible.
 - Built-in bot for new threads, replies and optional member registrations. Activity cards are filtered according to each reader's forum permissions; password-protected forums are excluded.
 - Independent thank-you and short-post filters, configurable phrases and word threshold, optional exemptions, and an ACP tester that evaluates examples without publishing them.
-- Custom bot responses, optional sound, expandable and collapsible chat.
+- A bundled original notification sound, with a volume control and preview. Each visitor chooses whether to enable it.
+- Custom bot responses, expandable and collapsible chat.
 - Automatic light/dark detection, explicit light/dark palettes, accent picker, adjustable height and spacing.
 - Quick setup, missing-file diagnostics and automatic placement for standard MyBB index templates.
 
@@ -51,9 +52,15 @@ The filters apply to replies by default; you can include new topics too. The opt
 
 These rules affect bot notifications. Forum posts, thanks/unlock plugins, chat messages and private conversations remain intact. See the [full bot guide](docs/ACTIVITY-BOT.md) for phrase matching, word counting and existing-history behaviour.
 
-## Upgrade from 2.0–2.3
+## Message sounds
 
-Back up first. **Deactivate**, upload every file in `Upload`, then activate again and hard-refresh the forum. **Do not uninstall to update.** Existing conversation history, settings and chosen appearance are retained; fresh installations default to automatic appearance. Version 2.4.0 adds the new filter settings with the defaults above. Review them in **Activity bot** after updating.
+The installation ZIP includes `Upload/jscripts/sttshoutbox/notify.wav`: an original short two-note chime, served from your own forum. There is no external sound service or separate download to configure. Use **♪** in the chat header to turn sound on/off; the adjacent sound settings open the volume control and preview. Sound starts disabled; the preference and volume are remembered in the current browser for each forum account.
+
+Browsers require a click before allowing audio. After reopening the forum, interact with the page to allow your saved preference to play notifications. Loading chat history, your own messages and activity-bot notices do not make a sound. A burst of incoming messages produces at most one notification every three seconds.
+
+## Upgrade from 2.0–2.4
+
+Back up first. **Deactivate**, upload every file in `Upload`, then activate again and hard-refresh the forum. **Do not uninstall to update.** Include the new `jscripts/sttshoutbox/notify.wav` file. Existing conversation history, settings and chosen appearance are retained; fresh installations default to automatic appearance. Upgrades from versions before 2.4 add the filter defaults described above. Review them in **Activity bot** after updating.
 
 ## Requirements and limits
 
@@ -79,4 +86,4 @@ Report reproducible problems in [Issues](https://github.com/Swir/STTShoutbox/iss
 
 ## License
 
-STTShoutbox code: [MIT](LICENSE.txt), SWIRTV TEAM. MyBB is a separate project by the MyBB Group. No third-party theme or graphical smiley collection is bundled.
+STTShoutbox code and its original notification chime: [MIT](LICENSE.txt), SWIRTV TEAM. MyBB is a separate project by the MyBB Group. No third-party theme or graphical smiley collection is bundled.

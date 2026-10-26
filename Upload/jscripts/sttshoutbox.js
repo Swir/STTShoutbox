@@ -4,7 +4,35 @@
  if(!root||!config)return;
  const cfg=JSON.parse(config.textContent);
  const fallback={"ui_could_not_connect_to_the_chat_1bbda1":"Could not connect to the chat.","ui_refresh_the_page_to_renew_your_session_or_complete_t_380151":"Refresh the page to renew your session or complete the site verification.","ui_administrator_preview_swirtv_team_dafc0a":"Administrator preview · SWIRTV TEAM","ui_a_place_for_our_community_694c04":"A place for our community","ui_connecting_c1994a":"Connecting…","ui_turn_sound_off_4dbeb0":"Turn sound off","ui_turn_sound_on_d92467":"Turn sound on","ui_new_message_sound_da7181":"New message sound","ui_expand_chat_ff4d47":"Expand chat","ui_show_chat_b7f5fe":"Show chat","ui_hide_chat_191b13":"Hide chat","ui_show_or_hide_chat_16e8c8":"Show or hide chat","ui_conversations_fdfb91":"Conversations","ui_general_f0badc":"# General","ui_private_200e9c":"✉ Private","ui_close_conversations_439140":"Close conversations","ui_private_conversations_124102":"Private conversations","ui_find_a_member_182eb0":"Find a member…","ui_find_a_member_to_chat_with_97761a":"Find a member to chat with","ui_messages_are_visible_to_the_participants_forum_priva_453321":"Messages are visible to the participants. Forum privacy settings apply.","ui_older_messages_011978":"↑ Older messages","ui_chat_messages_604574":"Chat messages","ui_new_messages_ca81fd":" New messages","ui_write_a_message_53505d":"Write a message…","ui_log_in_to_join_the_conversation_37e187":"Log in to join the conversation","ui_message_8a4754":"Message","ui_smilies_17d0af":"☺ Smilies","ui_enter_send_shift_enter_new_line_f3750c":"Enter — send · Shift+Enter — new line","ui_send_6161a2":"Send ↗","ui_smiley_picker_f090a4":"Smiley picker","ui_search_smilies_66a1fd":"Search smilies…","ui_search_smilies_3cd3f4":"Search smilies","ui_recent_b17a5b":"Recent","ui_close_smilies_8205a6":"Close smilies","ui_no_matching_smilies_c35171":"No matching smilies.","ui_choose_a_member_to_start_a_conversation_ff0177":"Choose a member to start a conversation.","ui_this_is_the_start_of_your_conversation_say_hello_04d82e":"This is the start of your conversation. Say hello 👋","ui_it_is_quiet_here_start_a_conversation_144286":"It is quiet here. Start a conversation 👋","ui_mention_3a8063":"Mention ","ui_edited_7a5e88":"edited","ui_this_message_has_been_edited_237267":"This message has been edited","ui_private_a23aa9":"private","ui_you_were_mentioned_94e0c2":"you were mentioned","ui_this_message_has_been_withdrawn_4f8b52":"This message has been withdrawn.","ui_reaction_e25678":"Reaction ","ui_edit_6ebdce":"Edit","ui_reply_540892":"Reply","ui_replying_to_8151e0":"Replying to: ","ui_private_ffd7ec":"Private","ui_withdraw_af7e9b":"Withdraw","ui_withdraw_this_message_from_the_conversation_41ace3":"Withdraw this message from the conversation?","ui_save_changes_e4249f":"Save changes","ui_you_are_editing_your_message_9f026c":"You are editing your message","ui_cancel_49285f":"Cancel","ui_private_message_to_f7d2db":"Private message to ","ui_refreshing_3fb27e":"Refreshing…","ui_live_769d27":"● Live","ui_disconnected_8ac350":"Disconnected","ui_the_message_and_quote_exceed_the_character_limit_f7f3ef":"The message and quote exceed the character limit.","ui_if_the_connection_was_interrupted_check_the_history__ff675a":" If the connection was interrupted, check the history before sending again."};
+ Object.assign(fallback,{ui_sound_settings:'Sound settings',ui_sound_volume:'Volume',ui_sound_preview:'Play sample',ui_sound_ready:'Sound is ready. Your choice is saved in this browser.',ui_sound_note:'A gentle chime for new messages. History, your own messages and activity bot notices stay silent.',ui_sound_unavailable:'Sound could not play. Try the sample again.',ui_sound_enabled:'Message sound',ui_sound_close:'Close sound settings'});
  const t=(key)=>typeof cfg.i18n?.[key]==='string'?cfg.i18n[key]:(fallback[key]||key);
+ // STT SOUND HELPERS START — pure decisions and a reusable, gesture-unlocked player.
+ function sttSoundKey(endpoint,uid,href){const u=new URL(endpoint,href);return 'stt_sound_v1:'+u.origin+u.pathname+':'+Math.max(0,Number(uid)||0);}
+ function sttSoundPreferences(storage,key,initialVolume){
+  const defaults={enabled:false,volume:Math.max(0,Math.min(100,Number.isFinite(Number(initialVolume))?Number(initialVolume):40))};
+  try{const saved=JSON.parse(storage.getItem(key)||'null');if(saved&&typeof saved==='object'){defaults.enabled=saved.enabled===true;if(typeof saved.volume==='number'&&Number.isFinite(saved.volume))defaults.volume=Math.max(0,Math.min(100,saved.volume));}}catch{}
+  return defaults;
+ }
+ function sttNewIncoming(rows,highWater,ready,uid){return ready&&rows.some(m=>Number(m.id)>highWater&&Number(m.uid)>0&&Number(m.uid)!==Number(uid)&&!m.deleted&&!m.event);}
+ function sttSoundPlayer(AudioType,url,feedback,now=()=>Date.now()){
+  let audio=null,unlocked=false,unlocking=null,revision=0,lastPlayed=-Infinity;
+  const getAudio=()=>{if(!audio){audio=new AudioType(url);audio.preload='none';}return audio;};
+  const stop=()=>{revision++;if(audio){audio.pause();try{audio.currentTime=0;}catch{}}};
+  const play=async(volume,preview=false)=>{
+   if(!preview&&(!unlocked||unlocking||now()-lastPlayed<3000||volume<=0))return false;
+   const turn=++revision;let a;
+   try{a=getAudio();a.pause();a.muted=false;a.volume=Math.max(0,Math.min(1,volume/100));a.currentTime=0;await a.play();if(turn!==revision)return false;unlocked=true;lastPlayed=now();if(preview)feedback(true);return true;}
+   catch{if(turn===revision)feedback(false);return false;}
+  };
+  const unlock=()=>{
+   if(unlocked||unlocking)return unlocking||Promise.resolve(unlocked);
+   const turn=++revision;let a;
+   try{a=getAudio();a.muted=true;a.volume=0;const started=a.play();unlocking=Promise.resolve(started).then(()=>{if(turn!==revision)return false;a.pause();a.currentTime=0;a.muted=false;unlocked=true;return true;}).catch(()=>false).finally(()=>{unlocking=null;});return unlocking;}
+   catch{return Promise.resolve(false);}
+  };
+  return {play,unlock,stop};
+ }
+ // STT SOUND HELPERS END
  // Read the surrounding theme once. No polling or page scrolling is involved.
  let appearance=['auto','light','dark','classic'].includes(cfg.appearance)?cfg.appearance:'classic';
  if(appearance==='auto'){
@@ -24,7 +52,11 @@
  const rx={like:'👍',heart:'❤️',laugh:'😄'};
  let peer=0, peerName='', epoch=0, messages=new Map(), conversations=[], emotes=[], busy=false, loading=false, timer, searchTimer, selectedReply=null, selectedEdit=null, beforeEdit=null, requestCount=0;
  const newestFirst=cfg.order!=='oldest';root.classList.toggle('stt-newest',newestFirst);
- let olderCursor=0;let sound=false, lastTop=0, draft=new Map(), olderAvailable=true;
+ let olderCursor=0;let lastTop=0, draft=new Map(), olderAvailable=true,notificationReady=false,notificationTop=0;
+ const soundKey=sttSoundKey(cfg.endpoint,cfg.uid,location.href);
+ let soundStorage=null;try{soundStorage=localStorage;}catch{}
+ const soundPreferences=sttSoundPreferences(soundStorage,soundKey,cfg.soundVolume??40);
+ let sound=soundPreferences.enabled,soundVolume=soundPreferences.volume;
  const node=(tag,cls,text)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;};
  const coloredName=m=>{let n=node('span','stt-nick');if(m.nameHtml)n.innerHTML=m.nameHtml;else n.textContent=m.name;return n;};
  const latest=()=>{log.scrollTop=newestFirst?0:log.scrollHeight;};
@@ -40,10 +72,35 @@
  const head=node('header','stt-head'), brand=node('div','stt-brand');brand.append(node('span','stt-mark','STT'),node('div','', cfg.title||'Shoutbox'));
  brand.lastChild.append(node('small','',cfg.preview?t("ui_administrator_preview_swirtv_team_dafc0a"):t("ui_a_place_for_our_community_694c04")));
  const state=node('span','stt-status',t("ui_connecting_c1994a"));state.setAttribute('role','status');
- const soundBtn=btn('♪','stt-icon',()=>{sound=!sound;soundBtn.classList.toggle('is-on',sound);soundBtn.setAttribute('aria-pressed',String(sound));soundBtn.title=sound?t("ui_turn_sound_off_4dbeb0"):t("ui_turn_sound_on_d92467");},t("ui_turn_sound_on_d92467"));soundBtn.setAttribute('aria-label',t("ui_new_message_sound_da7181"));soundBtn.setAttribute('aria-pressed','false');
+ const soundBtn=btn('♪','stt-icon stt-sound-toggle',()=>setSound(!sound),t('ui_turn_sound_on_d92467'));
+ soundBtn.setAttribute('aria-label',t('ui_new_message_sound_da7181'));
+ const soundSettingsBtn=btn('⌄','stt-icon stt-sound-settings',()=>setSoundPanel(soundPanel.hidden),t('ui_sound_settings'));
+ soundSettingsBtn.setAttribute('aria-label',t('ui_sound_settings'));soundSettingsBtn.setAttribute('aria-expanded','false');soundSettingsBtn.setAttribute('aria-controls','stt-sound-panel');
+ const soundPanel=node('section','stt-sound-panel');soundPanel.id='stt-sound-panel';soundPanel.hidden=true;soundPanel.setAttribute('aria-label',t('ui_sound_settings'));
+ const soundPanelHead=node('div','stt-sound-panel-head');soundPanelHead.append(node('strong','',t('ui_sound_settings')),btn('×','stt-icon',()=>{setSoundPanel(false);soundSettingsBtn.focus();},t('ui_sound_close')));
+ const soundCheck=node('input');soundCheck.type='checkbox';soundCheck.addEventListener('change',()=>setSound(soundCheck.checked));
+ const soundLabel=node('label','stt-sound-label');soundLabel.append(soundCheck,node('span','',t('ui_sound_enabled')));
+ const soundSlider=node('input','stt-sound-volume');soundSlider.type='range';soundSlider.min='0';soundSlider.max='100';soundSlider.step='5';soundSlider.id='stt-sound-volume';soundSlider.value=String(soundVolume);
+ const volumeLabel=node('label','stt-sound-volume-label',t('ui_sound_volume'));volumeLabel.htmlFor=soundSlider.id;const volumeValue=node('output','',soundVolume+'%');volumeValue.setAttribute('for',soundSlider.id);volumeLabel.append(volumeValue);
+ const soundFeedback=node('p','stt-sound-feedback');soundFeedback.setAttribute('role','status');soundFeedback.setAttribute('aria-live','polite');
+ const audioURL=safeURL(cfg.soundUrl||new URL('jscripts/sttshoutbox/notify.wav',new URL('.',new URL(cfg.endpoint,location.href))).href);
+ const soundPlayer=sttSoundPlayer(window.Audio,audioURL,ok=>{soundFeedback.textContent=t(ok?'ui_sound_ready':'ui_sound_unavailable');soundFeedback.classList.toggle('has-error',!ok);});
+ const soundPreview=btn('▷ '+t('ui_sound_preview'),'stt-sound-preview',()=>soundPlayer.play(soundVolume,true));
+ soundPanel.append(soundPanelHead,soundLabel,volumeLabel,soundSlider,soundPreview,node('p','stt-sound-note',t('ui_sound_note')),soundFeedback);
+ soundSlider.addEventListener('input',()=>{soundVolume=Number(soundSlider.value);volumeValue.textContent=soundVolume+'%';saveSound();});
+ function saveSound(){try{soundStorage?.setItem(soundKey,JSON.stringify({enabled:sound,volume:soundVolume}));}catch{}}
+ function updateSoundButton(){soundBtn.classList.toggle('is-on',sound);soundBtn.setAttribute('aria-pressed',String(sound));soundBtn.title=t(sound?'ui_turn_sound_off_4dbeb0':'ui_turn_sound_on_d92467');soundCheck.checked=sound;}
+ function setSound(enabled){sound=enabled;updateSoundButton();saveSound();if(sound)soundPlayer.play(soundVolume,true);else soundPlayer.stop();}
+ function setSoundPanel(open){soundPanel.hidden=!open;root.classList.toggle('stt-sound-open',open);soundSettingsBtn.setAttribute('aria-expanded',String(open));if(open)soundCheck.focus({preventScroll:true});}
+ updateSoundButton();
+ // Browsers require a gesture even when the preference was remembered from a previous visit.
+ const unlockRememberedSound=()=>{if(sound)soundPlayer.unlock();};
+ document.addEventListener('pointerdown',unlockRememberedSound,{passive:true});document.addEventListener('keydown',unlockRememberedSound);
+ document.addEventListener('click',e=>{if(!soundPanel.hidden&&!soundPanel.contains(e.target)&&!soundSettingsBtn.contains(e.target)&&!soundBtn.contains(e.target))setSoundPanel(false);});
+ root.addEventListener('keydown',e=>{if(e.key==='Escape'&&!soundPanel.hidden){setSoundPanel(false);soundSettingsBtn.focus();}});
  const full=btn('⛶','stt-icon',()=>{root.classList.toggle('stt-expanded');full.setAttribute('aria-pressed',String(root.classList.contains('stt-expanded')));},t("ui_expand_chat_ff4d47"));full.setAttribute('aria-label',t("ui_expand_chat_ff4d47"));
  const collapse=btn('−','stt-icon',()=>{const collapsed=root.classList.toggle('stt-collapsed');collapse.textContent=collapsed?'+':'−';collapse.setAttribute('aria-expanded',String(!collapsed));collapse.setAttribute('aria-label',collapsed?t("ui_show_chat_b7f5fe"):t("ui_hide_chat_191b13"));},t("ui_show_or_hide_chat_16e8c8"));collapse.setAttribute('aria-label',t("ui_hide_chat_191b13"));collapse.setAttribute('aria-expanded','true');
- head.append(brand,state,soundBtn,full,collapse);
+ head.append(brand,state,soundBtn,soundSettingsBtn,full,collapse);
  const tabs=node('nav','stt-tabs');tabs.setAttribute('aria-label',t("ui_conversations_fdfb91"));
  const publicBtn=btn(t("ui_general_f0badc"),'stt-tab is-active',()=>switchPeer(0,''));
  const privateBtn=btn('', 'stt-tab',()=>{if(people.hidden)openPrivatePanel();else{people.hidden=true;privateBtn.setAttribute('aria-expanded','false');queuePrivateRead();}});privateBtn.hidden=!cfg.private;privateBtn.setAttribute('aria-expanded','false');
@@ -73,7 +130,7 @@
  for(const [key,label]of [['forum','Forum'],['unicode','Emoji'],['recent',t("ui_recent_b17a5b")]])emojiTabs.append(btn(label,'stt-chip',()=>{emojiMode=key;renderEmotes();}));
  const pickerHead=node('div','stt-picker-head');pickerHead.append(emojiSearch,btn('×','stt-icon',()=>picker.hidden=true,t("ui_close_smilies_8205a6")));picker.append(pickerHead,emojiTabs,grid);
  const mentions=node('div','stt-mentions');mentions.hidden=true;
- tabs.append(older);main.append(log,news,reply,editBar,error,picker,mentions,form);layout.append(main,people);root.append(head,tabs,layout);
+ tabs.append(older);main.append(log,news,reply,editBar,error,picker,mentions,form);layout.append(main,people);root.append(head,soundPanel,tabs,layout);
  let recent=[];try{recent=JSON.parse(localStorage.getItem('stt_emotes')||'[]');if(!Array.isArray(recent))recent=[];}catch{}
  function tell(s){error.textContent=s;error.hidden=!s;}
  function count(){counter.textContent=input.value.length+' / '+cfg.limit;}
@@ -164,13 +221,13 @@
  function startEdit(m){if(busy)return;if(!selectedEdit)beforeEdit={text:input.value,reply:selectedReply};selectedEdit={id:m.id,text:m.text,peer};clearReply();input.value=m.text;count();send.textContent=t("ui_save_changes_e4249f");editBar.replaceChildren(node('span','',t("ui_you_are_editing_your_message_9f026c")),btn(t("ui_cancel_49285f"),'stt-small',cancelEdit));editBar.hidden=false;input.focus();}
  function cancelEdit(){if(!selectedEdit)return;selectedEdit=null;input.value=beforeEdit?.text||'';const savedReply=beforeEdit?.reply;beforeEdit=null;clearReply();if(savedReply){selectedReply=savedReply;reply.replaceChildren(node('span','',t("ui_replying_to_8151e0")+savedReply.name+' · '+savedReply.text.slice(0,90)),btn('×','stt-icon',clearReply));reply.hidden=false;}editBar.hidden=true;editBar.replaceChildren();send.textContent=t("ui_send_6161a2");count();}
  function clearReply(){selectedReply=null;reply.hidden=true;reply.replaceChildren();}
- async function switchPeer(uid,name){cancelEdit();draft.set(peer,input.value);peer=uid;peerName=name;epoch++;messages.clear();lastTop=0;olderCursor=0;olderAvailable=true;older.hidden=false;input.value=draft.get(peer)||'';count();clearReply();tell('');publicBtn.classList.toggle('is-active',!peer);privateBtn.classList.toggle('is-active',!!peer);room.textContent=peer?'🔒 '+name:'';input.placeholder=peer?t("ui_private_message_to_f7d2db")+name+'…':t("ui_write_a_message_53505d");people.hidden=true;privateBtn.setAttribute('aria-expanded','false');news.hidden=true;render();await load();}
- function beep(){if(!sound)return;try{let a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=660;g.gain.value=.045;o.start();g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.15);o.stop(a.currentTime+.15);o.onended=()=>a.close();}catch{}}
+ async function switchPeer(uid,name){cancelEdit();draft.set(peer,input.value);peer=uid;peerName=name;epoch++;messages.clear();lastTop=0;notificationReady=false;notificationTop=0;olderCursor=0;olderAvailable=true;older.hidden=false;input.value=draft.get(peer)||'';count();clearReply();tell('');publicBtn.classList.toggle('is-active',!peer);privateBtn.classList.toggle('is-active',!!peer);room.textContent=peer?'🔒 '+name:'';input.placeholder=peer?t("ui_private_message_to_f7d2db")+name+'…':t("ui_write_a_message_53505d");people.hidden=true;privateBtn.setAttribute('aria-expanded','false');news.hidden=true;render();await load();}
+ function beep(){if(sound)soundPlayer.play(soundVolume);}
  async function load(){
   const turn=epoch,roomPeer=peer,request=++requestCount;state.textContent=t("ui_refreshing_3fb27e");
-  try{let data=await api('load',{peer:roomPeer});if(turn!==epoch||request!==requestCount)return;const old=lastTop;lastTop=data.messages.at(-1)?.id||0;for(const m of data.messages)messages.set(m.id,m);if(!olderCursor)olderCursor=data.cursor||0;conversations=data.conversations;conversationRevision++;
+  try{let data=await api('load',{peer:roomPeer});if(turn!==epoch||request!==requestCount)return;const incomingCurrent=sttNewIncoming(data.messages,notificationTop,notificationReady,cfg.uid);notificationReady=true;notificationTop=Math.max(notificationTop,...data.messages.map(m=>Number(m.id)||0));lastTop=data.messages.at(-1)?.id||0;for(const m of data.messages)messages.set(m.id,m);if(!olderCursor)olderCursor=data.cursor||0;conversations=data.conversations;conversationRevision++;
  const incomingPrivate=unreadSnapshot!==null&&conversations.some(c=>unreadCount(c)>(unreadSnapshot.get(c.uid)||0));
- unreadSnapshot=new Map(conversations.map(c=>[c.uid,unreadCount(c)]));renderConversations();render();state.textContent=t("ui_live_769d27");state.classList.add('is-live');if(incomingPrivate||(old&&lastTop>old&&data.messages.some(m=>m.id>old&&m.uid!==cfg.uid)))beep();queuePrivateRead();}
+ unreadSnapshot=new Map(conversations.map(c=>[c.uid,unreadCount(c)]));renderConversations();render();state.textContent=t("ui_live_769d27");state.classList.add('is-live');if(incomingPrivate||incomingCurrent)beep();queuePrivateRead();}
   catch(e){if(turn===epoch){state.textContent=t("ui_disconnected_8ac350");state.classList.remove('is-live');tell(e.message);}}
  }
  async function loadOlder(){if(!olderCursor||!olderAvailable)return;let before=olderCursor,turn=epoch;older.disabled=true;try{let d=await api('load',{peer,before});if(turn!==epoch)return;let h=log.scrollHeight,top=log.scrollTop;for(const m of d.messages)messages.set(m.id,m);render();log.scrollTop=newestFirst?top:top+log.scrollHeight-h;olderCursor=d.cursor||0;olderAvailable=olderCursor>0;older.hidden=!olderAvailable;}catch(e){tell(e.message);}finally{older.disabled=false;}}

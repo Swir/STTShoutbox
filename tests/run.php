@@ -14,6 +14,7 @@ class Redirect extends Exception{}
 function admin_redirect($url){throw new Redirect($url);}
 class PageDouble{function add_breadcrumb_item($s){} function output_header($s){echo '<!doctype html><meta charset="utf-8"><title>'.htmlspecialchars_uni($s).'</title><style>body{font:14px system-ui;margin:35px;color:#253448;background:#fff}a{color:#006dae}summary{cursor:pointer}</style>';}function output_inline_error($e){echo '<p role="alert">'.htmlspecialchars_uni(implode(' ',$e)).'</p>';}function output_footer(){}}
 class MyBBdouble{public $version_code=1841,$settings=['bburl'=>'https://example.invalid/forum'],$request_method='get',$input=[],$post_code='test-token',$user=[],$usergroup=[];function get_input($k){return $this->input[$k]??'';}}
+class TemplatesDouble{public $cache=['index'=>'{$header}{$forums}{$footer}'];function get($name){return $this->cache[$name]??'';}}
 class ResultDouble{public $row;function __construct($r){$this->row=$r;}}
 class DbDouble{
  public $type='mysqli',$tables=[],$rows=['settings'=>[],'settinggroups'=>[]],$ddl=[],$mutations=0,$rebuilds=0;
@@ -43,7 +44,9 @@ try{
  ck(stt_t('message_length',['count'=>123])==='Wpisz wiadomość o długości do 123 znaków.','Polish error placeholder');
  $lang->language='english/admin';stt_admin_language();ck($lang->setting_stt_private==='Private conversations','English ACP settings');
  ck(stt_t('message_length',['count'=>123])==='Enter a message of up to 123 characters.','English error placeholder');
- ck(count(stt_ui_dictionary())===60,'Only frontend strings passed to JavaScript');
+ $frontend=stt_ui_dictionary();$expectedFrontend=array_filter($english,fn($key)=>str_starts_with($key,'ui_'),ARRAY_FILTER_USE_KEY);
+ ck($frontend===$expectedFrontend&&count($frontend)>0,'Frontend dictionary includes all UI strings and no server or administrator strings');
+ foreach(['ui_sound_settings','ui_sound_volume','ui_sound_preview','ui_sound_ready','ui_sound_note','ui_sound_unavailable','ui_sound_enabled','ui_sound_close']as$key){ck(isset($frontend[$key])&&trim($frontend[$key])!=='','Frontend sound control is translated: '.$key);}
  $mybb->user=['uid'=>0];$mybb->usergroup=['canview'=>0];
  try{stt_send(0,'x');throw new Exception('Expected blocked post');}catch(RuntimeException$e){ck($e->getMessage()==='You cannot post in this chat.','English API denial');}
  $lang->language='polish';try{stt_send(0,'x');throw new Exception('Expected blocked post');}catch(RuntimeException$e){ck($e->getMessage()==='Nie możesz pisać na czacie.','Polish API denial');}
@@ -60,6 +63,29 @@ try{
  ck(substr_count($index,'{$sttshoutbox}')===1,'Repeated activation does not duplicate placement');
  $required=MYBB_ROOT.'jscripts/sttshoutbox.js';rename($required,$required.'.test');
  ck(count(stt_setup_requirements())===1,'Incomplete upload diagnosed');rename($required.'.test',$required);
+ $soundFile=MYBB_ROOT.'jscripts/sttshoutbox/notify.wav';
+ ck(is_file($soundFile),'Installation package includes notification audio');
+ $wav=file_get_contents($soundFile);
+ ck(strlen($wav)>44&&substr($wav,0,4)==='RIFF'&&substr($wav,8,4)==='WAVE','Bundled notification is a nonempty WAV asset');
+ rename($soundFile,$soundFile.'.test');$soundIssues=stt_setup_requirements();
+ ck(count($soundIssues)===1&&str_contains($soundIssues[0],'jscripts/sttshoutbox/notify.wav'),'Incomplete audio upload is diagnosed by the installer');rename($soundFile.'.test',$soundFile);
+ $info=sttshoutbox_info();
+ ck($info['version']==='2.5.0','Plugin reports release 2.5.0');
+ ck(str_contains($info['description'],'action=sttshoutbox_setup')&&str_contains($info['description'],'action=sttshoutbox_bot')&&str_contains($info['description'],'module=config-settings'),'Installed plugin offers organised setup, bot and advanced configuration links');
+ ck(!str_contains($info['description'],'Samodzielny czat STT:')&&!str_contains($info['description'],'Standalone STT chat:'),'Plugin entry omits the old feature sentence');
+ // Render actual public config from both domain-root and nested forum installations.
+ $renderBefore=[$mybb->settings,$mybb->user,$mybb->usergroup];$templates=new TemplatesDouble;
+ $mybb->user=['uid'=>7,'username'=>'Example member'];$mybb->usergroup=['canview'=>1];
+ foreach(['https://example.invalid','https://example.invalid/community/forum/']as$baseUrl){
+  $mybb->settings['bburl']=$baseUrl;sttshoutbox_render();
+  ck(preg_match('~<script type="application/json" id="stt-config">(.*?)</script>~s',$sttshoutbox,$configMatch)===1,'Public configuration renders for '.$baseUrl);
+  $renderConfig=json_decode($configMatch[1],true,512,JSON_THROW_ON_ERROR);
+  ck(($renderConfig['soundUrl']??null)===rtrim($baseUrl,'/').'/jscripts/sttshoutbox/notify.wav?v=2.5.0','Bundled sound URL follows this forum installation path');
+  ck(($renderConfig['soundVolume']??null)===40,'Sound has a moderate default volume');
+  ck(isset($renderConfig['i18n'])&&!array_diff_key($renderConfig['i18n'],$expectedFrontend),'Public config does not leak administrator translations');
+  ck(str_contains($sttshoutbox,'sttshoutbox.js?v=2.5.0')&&str_contains($sttshoutbox,'sttshoutbox.css?v=2.5.0'),'Fresh script and style versions are requested together');
+ }
+ [$mybb->settings,$mybb->user,$mybb->usergroup]=$renderBefore;
  $valid=['title'=>'Nasza ekipa 😀','appearance'=>'light','accent'=>'#E5B800','height'=>'360','density'=>'comfortable','order'=>'oldest','private'=>'0','bot_enabled'=>'1'];
  $out=stt_setup_validate($valid);ck($out['accent']==='#e5b800'&&$out['title']===$valid['title'],'Setup validates Unicode and normalizes colour');
  foreach(['height'=>'999','title'=>'','accent'=>'red;url(x)','appearance'=>'evil','private'=>'yes','order'=>[]]as$k=>$bad){try{stt_setup_validate(array_replace($valid,[$k=>$bad]));throw new Exception('Accepted invalid '.$k);}catch(InvalidArgumentException$e){$tests[]='Reject invalid '.$k;}}

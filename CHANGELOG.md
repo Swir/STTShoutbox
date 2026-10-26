@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.5.0 — 2026-10-26
+
+- A shorter, organised plugin entry with clearly grouped configuration links.
+- Original bundled `jscripts/sttshoutbox/notify.wav` notification sound, served locally with the plugin. No external audio service is required.
+- Sound controls include a preview and volume adjustment. Sound is initially off; each account's browser remembers its preference and volume.
+- New incoming-message notifications stay silent when chat history loads, the visitor sends their own message or the activity bot posts a notice. Bursts are limited to one chime every three seconds. Browser audio permissions still require user interaction.
+- Updated Polish and English installation guides, including the new sound folder. Existing bot configuration and conversation history are preserved.
+
 ## 2.4.0 — 2026-10-26
 
 - Dedicated **Activity bot** page in Admin CP → Configuration → Plugins → STTShoutbox, also linked from Quick setup. Notification types, forum exclusions and filters can be configured together in Polish or English.

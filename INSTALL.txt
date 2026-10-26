@@ -1,4 +1,4 @@
-STTShoutbox 2.4.0 — SWIRTV TEAM
+STTShoutbox 2.5.0 — SWIRTV TEAM
 Open START-EN.html in your browser for the beginner guide.
 
 INSTALL
@@ -7,15 +7,16 @@ Back up your forum files and database first.
    MyBB root directory, alongside index.php. Use the hosting file manager
    or FTP/SFTP. Merge inc and jscripts; never delete their existing files.
 2. Admin CP → Configuration → Plugins → STTShoutbox → Install & Activate.
-3. Click Quick setup — customise your chat. Save your preferences and
+3. Click Appearance & setup. Save your preferences and
    open the forum homepage. No other shoutbox or bot account is needed.
 
-UPGRADE FROM 2.0 / 2.1 / 2.2 / 2.3
+UPGRADE FROM 2.0 / 2.1 / 2.2 / 2.3 / 2.4
 Back up, deactivate the plugin, upload ALL files from Upload, activate
 again and hard-refresh the forum. Do not uninstall when updating.
 Existing settings, history and selected appearance stay intact.
-Fresh installs use automatic appearance. Version 2.4.0 adds filter settings;
-review Activity bot after updating. Do not upload only the main PHP file.
+Fresh installs use automatic appearance. Include the new sound file
+jscripts/sttshoutbox/notify.wav. Upgrades from before 2.4 add filter
+settings; review Activity bot after updating. Upload the complete package.
 
 LANGUAGE
 The chat follows the language MyBB resolves for the visitor. Quick setup
@@ -38,8 +39,20 @@ Use the link in Quick setup or Configuration → Settings → STTShoutbox.
 Configure groups, limits, flood delay, administrator preview and bot rules.
 Posting requires login. Forum/group access and privacy settings apply.
 Private chat is separate from MyBB PMs. Authors can edit/withdraw their
-own messages. Chat moderators can withdraw public messages. Sound is off
-by default and can be enabled by each visitor.
+own messages. Chat moderators can withdraw public messages.
+
+MESSAGE SOUND
+The original two-note chime is bundled at jscripts/sttshoutbox/notify.wav.
+It plays from your own forum; no separate download or external service.
+The header's music-note button turns sound on/off. Open the adjacent sound
+settings to adjust volume and preview it. Sound starts off. Each forum
+account's preference and volume are remembered in the current browser.
+Browsers require a click before playing audio. After reopening the forum,
+interact with the page to enable your saved preference. If playback is
+blocked, use the preview button to retry and check your tab/device volume.
+History loading, your own messages and activity-bot notices stay silent.
+A burst of incoming messages produces at most one sound every 3 seconds.
+Upload the entire jscripts/sttshoutbox folder when installing/updating.
 
 BOT
 Open Configuration → Plugins → STTShoutbox → Activity bot, or use the link

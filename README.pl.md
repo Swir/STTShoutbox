@@ -2,7 +2,7 @@
 
 Samodzielny shoutbox dla **MyBB 1.8**, autorstwa **SWIRTV TEAM**, dostępny po **polsku i angielsku**.
 
-[English](README.md) · [Pobierz 2.4.0](https://github.com/Swir/STTShoutbox/releases/tag/v2.4.0) · [Pełna instrukcja](INSTALACJA.txt) · [Instrukcja bota](docs/BOT-AKTYWNOSCI.md)
+[English](README.md) · [Pobierz 2.5.0](https://github.com/Swir/STTShoutbox/releases/tag/v2.5.0) · [Pełna instrukcja](INSTALACJA.txt) · [Instrukcja bota](docs/BOT-AKTYWNOSCI.md)
 
 ![Polski interfejs z przykładowymi wiadomościami](docs/screenshots/chat-pl.png)
 
@@ -10,9 +10,9 @@ Samodzielny shoutbox dla **MyBB 1.8**, autorstwa **SWIRTV TEAM**, dostępny po *
 
 Najpierw zrób kopię plików i bazy forum.
 
-1. Pobierz `STTShoutbox-2.4.0.zip` z wydań i rozpakuj. Wgraj **zawartość folderu Upload** do katalogu MyBB, obok `index.php`. Scal katalogi `inc` i `jscripts`; nie usuwaj ich istniejącej zawartości.
+1. Pobierz `STTShoutbox-2.5.0.zip` z wydań i rozpakuj. Wgraj **zawartość folderu Upload** do katalogu MyBB, obok `index.php`. Scal katalogi `inc` i `jscripts`, także nowy folder dźwięku `jscripts/sttshoutbox`; nie usuwaj ich istniejącej zawartości.
 2. **ACP → Konfiguracja → Pluginy → STTShoutbox → Zainstaluj i aktywuj**.
-3. Kliknij **Szybki start — dopasuj czat**, wybierz wygląd i zapisz.
+3. Kliknij **Wygląd i ustawienia**, wybierz wygląd i zapisz.
 
 Czat pojawi się na stronie głównej standardowego forum. Nie wymaga innego shoutboxa, PluginLibrary ani osobnego konta bota. Paczka zawiera przewodnik `START.html` po polsku i `START-EN.html` po angielsku.
 
@@ -25,6 +25,7 @@ Czat pojawi się na stronie głównej standardowego forum. Nie wymaga innego sho
 - Powiadomienia bota respektują dostęp odbiorcy do działów; działy z hasłem są pomijane.
 - Osobne filtry podziękowań i krótkich postów, własna lista słów, regulowany limit oraz tester przykładów w ACP bez publikowania postów.
 - Wiadomości od najnowszych lub najstarszych, limity i uprawnienia grup.
+- Własny dźwięk wiadomości w paczce, regulacja głośności i odsłuch. Każdy sam decyduje, czy go włączyć.
 - Automatyczny jasny/ciemny wygląd, kolor przewodni, wysokość i odstępy.
 - Prosty panel startowy, sprawdzanie plików i pomoc w razie problemów.
 
@@ -45,9 +46,15 @@ Domyślnie reguły obejmują odpowiedzi; możesz rozszerzyć je na nowe tematy. 
 
 Filtry dotyczą powiadomień bota. Posty forum, podziękowania, odsłanianie treści i historia rozmów pozostają zachowane. Szczegóły liczenia słów i działania historii znajdziesz w [instrukcji bota](docs/BOT-AKTYWNOSCI.md).
 
-## Aktualizacja z 2.0–2.3
+## Dźwięk wiadomości
 
-Zrób kopię, **dezaktywuj** wtyczkę, wgraj wszystkie pliki z Upload, aktywuj ponownie i odśwież forum. Nie odinstalowuj przy aktualizacji. Historia, dotychczasowe ustawienia i wybrany wygląd zostają zachowane. Wersja 2.4.0 dodaje nowe ustawienia filtrów z wartościami opisanymi powyżej. Po aktualizacji sprawdź panel **Bot aktywności**.
+Paczka zawiera `Upload/jscripts/sttshoutbox/notify.wav` — krótki, własny sygnał z dwóch dźwięków, odtwarzany z Twojego forum. Nie trzeba szukać pliku ani podłączać zewnętrznego serwisu. Przycisk **♪** w nagłówku czatu włącza i wyłącza dźwięk, a obok otworzysz ustawienia głośności i odsłuch. Początkowo dźwięk jest wyłączony; wybór i głośność są zapamiętywane w bieżącej przeglądarce dla danego konta na forum.
+
+Przeglądarka wymaga kliknięcia, zanim dopuści dźwięk. Po ponownym otwarciu forum kliknij na stronie, aby zapamiętane ustawienie mogło odtwarzać powiadomienia. Historia, własne wiadomości i ogłoszenia bota aktywności nie uruchamiają dźwięku. Przy serii nowych wiadomości sygnał rozlega się najwyżej raz na trzy sekundy.
+
+## Aktualizacja z 2.0–2.4
+
+Zrób kopię, **dezaktywuj** wtyczkę, wgraj wszystkie pliki z Upload, aktywuj ponownie i odśwież forum. Nie odinstalowuj przy aktualizacji. Pamiętaj o nowym pliku `jscripts/sttshoutbox/notify.wav`. Historia, dotychczasowe ustawienia i wybrany wygląd zostają zachowane. Przy aktualizacji z wersji starszej niż 2.4 dodawane są filtry z wartościami opisanymi powyżej. Sprawdź je w panelu **Bot aktywności**.
 
 ## Wymagania i sprawdzenie
 
@@ -59,4 +66,4 @@ Nietypowy szablon index bez `{$header}` wymaga ręcznego umieszczenia `{$sttshou
 
 Publiczne wiadomości zapisują także adres IP nadawcy. Uwzględnij to w zasadach prywatności forum. Odinstalowanie usuwa ustawienia, ale **zachowuje historię**. Pełne usuwanie danych wymaga osobnej operacji opisanej w instrukcji. Paczka nie zawiera danych forum STT ani migratora innych shoutboxów.
 
-Kod STTShoutbox jest na [licencji MIT](LICENSE.txt). MyBB to oddzielny projekt MyBB Group. W paczce nie ma cudzych motywów ani zestawów graficznych emotikonów.
+Kod STTShoutbox i własny dźwięk powiadomienia są na [licencji MIT](LICENSE.txt). MyBB to oddzielny projekt MyBB Group. W paczce nie ma cudzych motywów ani zestawów graficznych emotikonów.

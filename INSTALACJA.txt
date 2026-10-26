@@ -1,4 +1,4 @@
-STTShoutbox 2.4.0 — SWIRTV TEAM
+STTShoutbox 2.5.0 — SWIRTV TEAM
 Otwórz START.html w przeglądarce — to krótki przewodnik dla początkujących.
 
 INSTALACJA W TRZECH KROKACH
@@ -10,7 +10,7 @@ Przed instalacją zapisz kopię plików i bazy forum.
 2. Panel administratora MyBB → Konfiguracja → Pluginy → STTShoutbox
    → Zainstaluj i aktywuj. Czat przygotuje własne tabele i pojawi się
    na stronie głównej standardowego forum MyBB.
-3. Przy pluginie kliknij „Szybki start — dopasuj czat”. Wybierz wygląd,
+3. Przy pluginie kliknij „Wygląd i ustawienia”. Wybierz wygląd,
    kolor, wysokość, kolejność wiadomości i dodatki. Zapisz i otwórz forum.
 Nie potrzebujesz innego shoutboxa, PluginLibrary ani konta bota.
 
@@ -23,12 +23,13 @@ Klasyczny STT zachowuje niebieski wygląd 2.1; kolor z palety dotyczy
 pozostałych trybów. Zmiany zobaczysz po odświeżeniu strony forum.
 Kolory nicków i emotikony są pobierane z ustawień forum.
 
-AKTUALIZACJA Z 2.0 / 2.1 / 2.2 / 2.3
+AKTUALIZACJA Z 2.0 / 2.1 / 2.2 / 2.3 / 2.4
 Zrób kopię. Dezaktywuj plugin (nie odinstalowuj), wgraj wszystkie pliki
 z Upload, aktywuj ponownie i odśwież forum Ctrl+F5. Historia i ustawienia
-zostają zachowane razem z wybranym wyglądem. Wersja 2.4.0 dodaje ustawienia
-filtrów; po aktualizacji otwórz Bot aktywności i sprawdź ich wartości.
-Wgraj cały folder Upload, nie tylko główny plik PHP.
+zostają zachowane razem z wybranym wyglądem. Wgraj nowy plik dźwięku
+jscripts/sttshoutbox/notify.wav. Przy przejściu z wersji starszej niż 2.4
+dodawane są ustawienia filtrów; sprawdź je w panelu Bot aktywności.
+Wgraj wszystkie pliki z Upload, nie tylko główny plik PHP.
 
 USTAWIENIA ZAAWANSOWANE
 Link w Szybkim starcie lub Konfiguracja → Ustawienia → STTShoutbox.
@@ -36,7 +37,20 @@ Tam ustawisz grupy, limity, blokady, podgląd administratora i bota.
 Pisanie wymaga zalogowania; dostęp respektuje uprawnienia forum i grup.
 Prywatne rozmowy czatu są oddzielne od PW MyBB i uwzględniają ustawienia
 prywatności uczestników. Autor może edytować/wycofać swoje wiadomości.
-Moderator czatu może wycofywać wiadomości publiczne. Dźwięk domyślnie OFF.
+Moderator czatu może wycofywać wiadomości publiczne.
+
+DŹWIĘK WIADOMOŚCI
+Własny sygnał z dwóch dźwięków jest w jscripts/sttshoutbox/notify.wav.
+Odtwarza się z Twojego forum, bez osobnego pobierania lub obcego serwisu.
+Przycisk nuty w nagłówku włącza i wyłącza dźwięk. Obok otworzysz ustawienia
+głośności i odsłuch. Początkowo dźwięk jest wyłączony. Wybór i głośność są
+zapamiętywane w bieżącej przeglądarce oddzielnie dla kont na forum.
+Przeglądarka wymaga kliknięcia, zanim odtworzy dźwięk. Po ponownym wejściu
+na forum kliknij na stronie, aby mogło działać zapamiętane ustawienie.
+Przy blokadzie użyj odsłuchu i sprawdź głośność karty oraz urządzenia.
+Wczytanie historii, własne wiadomości i ogłoszenia bota są bez dźwięku.
+Przy serii nowych wiadomości sygnał gra najwyżej raz na 3 sekundy.
+Przy instalacji i aktualizacji wgraj cały folder jscripts/sttshoutbox.
 
 BOT
 Otwórz Konfiguracja → Pluginy → STTShoutbox → Bot aktywności albo link

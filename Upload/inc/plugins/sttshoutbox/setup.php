@@ -74,7 +74,7 @@ function stt_setup_requirements(){
  if(!extension_loaded('mbstring'))$issues[]=stt_t('text_ask_your_hosting_provider_to_enable_the_php_mbstring_0feb85');
  if(!in_array($db->type,['mysqli','mysql','mysql_pdo'],true))$issues[]=stt_t('text_mysql_or_mariadb_is_required_4b7244');
  if((int)$mybb->version_code<1800||(int)$mybb->version_code>=1900)$issues[]=stt_t('text_this_package_is_intended_for_mybb_1_8_1c3be5');
- foreach(['inc/plugins/sttshoutbox/i18n.php','inc/languages/english/sttshoutbox.lang.php','inc/languages/polish/sttshoutbox.lang.php','inc/plugins/sttshoutbox/filters.php','inc/plugins/sttshoutbox/bot-admin.php','inc/plugins/sttshoutbox/bot.php','inc/plugins/sttshoutbox/service.php','inc/plugins/sttshoutbox/setup.php','jscripts/sttshoutbox.js','jscripts/sttshoutbox.css'] as $file){
+ foreach(['inc/plugins/sttshoutbox/i18n.php','inc/languages/english/sttshoutbox.lang.php','inc/languages/polish/sttshoutbox.lang.php','inc/plugins/sttshoutbox/filters.php','inc/plugins/sttshoutbox/bot-admin.php','inc/plugins/sttshoutbox/bot.php','inc/plugins/sttshoutbox/service.php','inc/plugins/sttshoutbox/setup.php','jscripts/sttshoutbox.js','jscripts/sttshoutbox.css','jscripts/sttshoutbox/notify.wav'] as $file){
   if(!is_file(MYBB_ROOT.$file))$issues[]=stt_t('missing_file',['file'=>$file]);
  }
  return $issues;
@@ -121,6 +121,7 @@ function stt_setup_admin(){
  echo stt_t('text_3_extras_eb0fbb');
  $select('private',stt_t('text_private_conversations_124102'),['1'=>stt_t('text_enabled_92323a'),'0'=>stt_t('text_disabled_b193b1')],stt_t('text_chat_conversations_are_separate_from_mybb_private_me_6fad67'));
  $select('bot_enabled',stt_t('text_bot_notifications_for_new_threads_and_replies_389b2e'),['1'=>stt_t('text_enabled_e743d8'),'0'=>stt_t('text_disabled_f2a59d')],stt_t('text_members_only_see_notifications_from_forums_they_can__cff8b7'));echo '</fieldset>';
+ echo '<fieldset><legend>'.$h(stt_t('setup_sound_title')).'</legend><p>'.$h(stt_t('setup_sound_note')).'</p><audio controls preload="none" aria-label="'.$h(stt_t('ui_sound_preview')).'" style="max-width:100%" src="'.$h(rtrim($mybb->settings['bburl'],'/').'/jscripts/sttshoutbox/notify.wav?v=2.5.0').'"></audio></fieldset>';
  echo stt_t('text_save_settings_a_target_blank_rel_noopener_href_179920').$h(rtrim($mybb->settings['bburl'],'/').'/index.php').stt_t('text_open_forum_48d576');
  $gid=(int)$db->fetch_field($db->simple_select('settinggroups','gid',"name='sttshoutbox'"),'gid');
  echo '<p><a href="index.php?module=config-plugins&amp;action=sttshoutbox_bot"><strong>'.htmlspecialchars_uni(stt_t('bot_panel_link')).'</strong></a></p>';
