@@ -70,7 +70,7 @@ try{
  rename($soundFile,$soundFile.'.test');$soundIssues=stt_setup_requirements();
  ck(count($soundIssues)===1&&str_contains($soundIssues[0],'jscripts/sttshoutbox/notify.wav'),'Incomplete audio upload is diagnosed by the installer');rename($soundFile.'.test',$soundFile);
  $info=sttshoutbox_info();
- ck($info['version']==='2.5.0','Plugin reports release 2.5.0');
+ ck($info['version']==='2.5.1','Plugin reports release 2.5.1');
  ck(str_contains($info['description'],'action=sttshoutbox_setup')&&str_contains($info['description'],'action=sttshoutbox_bot')&&str_contains($info['description'],'module=config-settings'),'Installed plugin offers organised setup, bot and advanced configuration links');
  ck(!str_contains($info['description'],'Samodzielny czat STT:')&&!str_contains($info['description'],'Standalone STT chat:'),'Plugin entry omits the old feature sentence');
  // Render actual public config from both domain-root and nested forum installations.
@@ -80,10 +80,10 @@ try{
   $mybb->settings['bburl']=$baseUrl;sttshoutbox_render();
   ck(preg_match('~<script type="application/json" id="stt-config">(.*?)</script>~s',$sttshoutbox,$configMatch)===1,'Public configuration renders for '.$baseUrl);
   $renderConfig=json_decode($configMatch[1],true,512,JSON_THROW_ON_ERROR);
-  ck(($renderConfig['soundUrl']??null)===rtrim($baseUrl,'/').'/jscripts/sttshoutbox/notify.wav?v=2.5.0','Bundled sound URL follows this forum installation path');
+  ck(($renderConfig['soundUrl']??null)===rtrim($baseUrl,'/').'/jscripts/sttshoutbox/notify.wav?v=2.5.1','Bundled sound URL follows this forum installation path');
   ck(($renderConfig['soundVolume']??null)===40,'Sound has a moderate default volume');
   ck(isset($renderConfig['i18n'])&&!array_diff_key($renderConfig['i18n'],$expectedFrontend),'Public config does not leak administrator translations');
-  ck(str_contains($sttshoutbox,'sttshoutbox.js?v=2.5.0')&&str_contains($sttshoutbox,'sttshoutbox.css?v=2.5.0'),'Fresh script and style versions are requested together');
+  ck(str_contains($sttshoutbox,'sttshoutbox.js?v=2.5.1')&&str_contains($sttshoutbox,'sttshoutbox.css?v=2.5.1'),'Fresh script and style versions are requested together');
  }
  [$mybb->settings,$mybb->user,$mybb->usergroup]=$renderBefore;
  $valid=['title'=>'Nasza ekipa 😀','appearance'=>'light','accent'=>'#E5B800','height'=>'360','density'=>'comfortable','order'=>'oldest','private'=>'0','bot_enabled'=>'1'];

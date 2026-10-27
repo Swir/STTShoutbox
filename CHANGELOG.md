@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.5.1 — 2026-10-27
+
+- Administrators, super moderators and assigned MyBB forum moderators get a red × button for public messages, with a translated accessible label and confirmation.
+- Withdrawn public messages disappear completely from the chat view, including old placeholders. Records remain in the existing storage; this is not database erasure.
+- Open chats reconcile removals during polling, including loaded older history, without restoring removed rows from a delayed response.
+- Ordinary members may still withdraw only their own public messages. Private conversations retain their existing participant-only withdrawal rules.
+- New PHP permission/history tests and JavaScript reconciliation tests; versioned script and stylesheet URLs refresh browser caches.
+
 ## 2.5.0 — 2026-10-26
 
 - A shorter, organised plugin entry with clearly grouped configuration links.

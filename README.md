@@ -2,7 +2,7 @@
 
 An independent shoutbox for **MyBB 1.8**, built by **SWIRTV TEAM**. Public chat, private conversations, forum activity notifications and a beginner-friendly setup page — in **English and Polish**.
 
-[Polski / Polish](README.pl.md) · [Download 2.5.0](https://github.com/Swir/STTShoutbox/releases/tag/v2.5.0) · [Installation guide](INSTALL.txt) · [Activity bot guide](docs/ACTIVITY-BOT.md)
+[Polski / Polish](README.pl.md) · [Download 2.5.1](https://github.com/Swir/STTShoutbox/releases/tag/v2.5.1) · [Installation guide](INSTALL.txt) · [Activity bot guide](docs/ACTIVITY-BOT.md)
 
 ![English chat preview with demonstration messages](docs/screenshots/chat-en.png)
 
@@ -10,7 +10,7 @@ An independent shoutbox for **MyBB 1.8**, built by **SWIRTV TEAM**. Public chat,
 
 Back up your forum files and database first.
 
-1. Download the `STTShoutbox-2.5.0.zip` release asset and extract it. Upload the **contents** of `Upload` into the MyBB root directory, alongside `index.php`. Merge the `inc` and `jscripts` directories, including the new `jscripts/sttshoutbox` sound folder; do not delete their existing contents.
+1. Download the `STTShoutbox-2.5.1.zip` release asset and extract it. Upload the **contents** of `Upload` into the MyBB root directory, alongside `index.php`. Merge the `inc` and `jscripts` directories, including the new `jscripts/sttshoutbox` sound folder; do not delete their existing contents.
 2. Open **Admin CP → Configuration → Plugins → STTShoutbox → Install & Activate**.
 3. Click **Appearance & setup** beside the plugin. Choose the appearance, accent colour, height and message order, then save.
 
@@ -52,15 +52,23 @@ The filters apply to replies by default; you can include new topics too. The opt
 
 These rules affect bot notifications. Forum posts, thanks/unlock plugins, chat messages and private conversations remain intact. See the [full bot guide](docs/ACTIVITY-BOT.md) for phrase matching, word counting and existing-history behaviour.
 
+## Remove public messages
+
+Administrators, super moderators and assigned MyBB forum moderators see a red **×** beside public messages, including activity-bot cards. Confirm removal to make the message disappear for everyone, with no withdrawn-message placeholder. Other open chats update on their next poll; unusually large loaded histories are checked in batches of 500 IDs. Ordinary members can withdraw only their own messages. Existing chat access, blocked-user and posting restrictions still apply.
+
+Old withdrawn public messages are also omitted from history. Private conversations keep their existing withdrawal behaviour and cannot be moderated by unrelated users. This hides records from the chat; it does not erase the original database records or backups.
+
 ## Message sounds
 
 The installation ZIP includes `Upload/jscripts/sttshoutbox/notify.wav`: an original short two-note chime, served from your own forum. There is no external sound service or separate download to configure. Use **♪** in the chat header to turn sound on/off; the adjacent sound settings open the volume control and preview. Sound starts disabled; the preference and volume are remembered in the current browser for each forum account.
 
 Browsers require a click before allowing audio. After reopening the forum, interact with the page to allow your saved preference to play notifications. Loading chat history, your own messages and activity-bot notices do not make a sound. A burst of incoming messages produces at most one notification every three seconds.
 
-## Upgrade from 2.0–2.4
+## Upgrade from 2.0–2.5.0
 
-Back up first. **Deactivate**, upload every file in `Upload`, then activate again and hard-refresh the forum. **Do not uninstall to update.** Include the new `jscripts/sttshoutbox/notify.wav` file. Existing conversation history, settings and chosen appearance are retained; fresh installations default to automatic appearance. Upgrades from versions before 2.4 add the filter defaults described above. Review them in **Activity bot** after updating.
+From **2.5.0**, back up, replace the files from `Upload`, and refresh the forum. No database migration or reactivation is needed for 2.5.1.
+
+From **older versions**, back up first. **Deactivate**, upload every file in `Upload`, then activate again and hard-refresh the forum. **Do not uninstall to update.** Include the new `jscripts/sttshoutbox/notify.wav` file. Existing conversation history, settings and chosen appearance are retained; fresh installations default to automatic appearance. Upgrades from versions before 2.4 add the filter defaults described above. Review them in **Activity bot** after updating.
 
 ## Requirements and limits
 
@@ -81,6 +89,8 @@ This package contains no forum database, user messages, credentials or third-par
 ## Tests and contributions
 
 With PHP CLI and `mbstring`, run `php tests/run.php tests english` and `php tests/run.php csrf polish`. Tests create a private temporary copy of the package and use in-memory database/template doubles. They do not connect to a forum database. JavaScript syntax can be checked with `node --check Upload/jscripts/sttshoutbox.js`.
+
+Moderation checks: `php tests/moderation.php` (also requires `pdo_sqlite`) and `node tests/moderation-behavior.mjs`. These verify permissions, clean public history, cross-tab removal batches and stale-response handling.
 
 Report reproducible problems in [Issues](https://github.com/Swir/STTShoutbox/issues), with MyBB/PHP versions and the affected theme. Never post passwords, API keys, database exports or private conversations.
 

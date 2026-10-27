@@ -1,0 +1,24 @@
+// Run actual reconciliation helpers, including delayed responses and private-ID collisions.
+import {readFile} from 'node:fs/promises';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const source=await readFile(new URL('../Upload/jscripts/sttshoutbox.js',import.meta.url),'utf8');
+const helpers=source.split('// STT MODERATION HELPERS START')[1].split('// STT MODERATION HELPERS END')[0];
+const context=vm.createContext({});vm.runInContext(helpers,context);
+const {sttKnownBatch:batch,sttMergeMessages:merge}=context;
+let checks=0;const check=(value,label)=>{assert.ok(value,label);checks++;};
+const messages=new Map([[1,{id:1}],[99,{id:99}]]),removed=new Set();
+merge(messages,[{id:100}], [1],true,removed);
+check(!messages.has(1)&&messages.has(99)&&messages.has(100),'Remove older loaded history while preserving ordinary/new rows');
+merge(messages,[{id:1}],[],true,removed);
+check(!messages.has(1),'Delayed history response cannot resurrect removed row');
+merge(messages,[{id:99,deleted:true}],[],true,removed);
+check(!messages.has(99),'Old-server withdrawal marker never renders in public chat');
+const privateRoom=new Map();merge(privateRoom,[{id:1,deleted:true}],[],false,removed);
+check(privateRoom.get(1)?.deleted===true,'Private withdrawal survives a same-ID public removal');
+const history=new Map(Array.from({length:1100},(_,i)=>[i+1,{id:i+1}]));
+let first=batch(history,0),second=batch(history,first.next),third=batch(history,second.next);
+check(first.known.split(',').length===500&&second.known.split(',').length===500&&third.known.split(',').length===100,'Bounded history checks');
+check(first.known.startsWith('1,')&&second.known.startsWith('501,')&&third.known.startsWith('1001,')&&third.next===0,'Rotate through all loaded history without starvation');
+check(batch(new Map(),500).known===''&&batch(new Map([[7,{}]]),1000).known==='7','Reset after room changes or shrinking history');
+console.log(`${checks} moderation frontend checks passed.`);

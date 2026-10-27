@@ -1,6 +1,6 @@
 <?php
 if(!defined('IN_MYBB'))exit;
-function stt_mod(){global $mybb;return !empty($mybb->usergroup['cancp'])||!empty($mybb->usergroup['issupermod']);}
+function stt_mod(){global $mybb;return !empty($mybb->user['uid'])&&(!empty($mybb->usergroup['cancp'])||!empty($mybb->usergroup['issupermod'])||(function_exists('is_moderator')&&is_moderator(0,'',(int)$mybb->user['uid'])));}
 function stt_group($setting){global $mybb;$s=(string)($mybb->settings[$setting]??'-1');return $s==='-1'||($s!==''&&is_member(explode(',',$s)));}
 function stt_view(){global $mybb;return !empty($mybb->usergroup['canview'])&&empty($mybb->usergroup['isbannedgroup'])&&stt_group('stt_groups_view');}
 function stt_write(){global $mybb;return stt_view()&&!empty($mybb->user['uid'])&&!in_array((int)$mybb->user['uid'],array_map('intval',explode(',',(string)($mybb->settings['stt_blocked_users']??''))),true)&&stt_group('stt_groups_write')&&(int)($mybb->user['postnum']??0)>=(int)($mybb->settings['stt_minposts']??0);}
@@ -27,7 +27,7 @@ function stt_user_data($row){return ['uid'=>(int)$row['uid'],'name'=>(string)$ro
 function stt_rows($peer,$before=0){
  global $db,$mybb,$stt_next_before;$stt_next_before=0;$before=max(0,(int)$before);$me=(int)$mybb->user['uid'];
  if($peer){stt_peer($peer);$q=$db->query('SELECT m.id,m.sender AS uid,m.body AS text,m.created AS date,m.modified,m.deleted,u.username,u.avatar,u.usergroup,u.displaygroup FROM '.TABLE_PREFIX.'stt_dm m LEFT JOIN '.TABLE_PREFIX.'users u ON u.uid=m.sender WHERE '.stt_pair($peer).($before?' AND m.id<'.$before:'').' ORDER BY m.id DESC LIMIT 50');}
- else{$q=$db->query('SELECT m.id,m.uid,m.text,m.date,m.modified,u.username,u.avatar,u.usergroup,u.displaygroup,h.sid AS hidden FROM '.TABLE_PREFIX.'stt_messages m LEFT JOIN '.TABLE_PREFIX.'users u ON u.uid=m.uid LEFT JOIN '.TABLE_PREFIX.'stt_hidden h ON h.sid=m.id WHERE m.text IS NOT NULL'.($before?' AND m.id<'.$before:'').' ORDER BY m.id DESC LIMIT 200');}
+ else{$q=$db->query('SELECT m.id,m.uid,m.text,m.date,m.modified,u.username,u.avatar,u.usergroup,u.displaygroup,h.sid AS hidden FROM '.TABLE_PREFIX.'stt_messages m LEFT JOIN '.TABLE_PREFIX.'users u ON u.uid=m.uid LEFT JOIN '.TABLE_PREFIX.'stt_hidden h ON h.sid=m.id WHERE m.text IS NOT NULL AND h.sid IS NULL'.($before?' AND m.id<'.$before:'').' ORDER BY m.id DESC LIMIT 200');}
  $raw=[];while($r=$db->fetch_array($q))$raw[]=$r;$events=[];if(!$peer&&$raw){$eq=$db->simple_select('stt_events','*','sid IN ('.implode(',',array_map('intval',array_column($raw,'id'))).')');while($e=$db->fetch_array($eq))$events[(int)$e['sid']]=$e;}
  $rows=[];foreach($raw as$r){$stt_next_before=(int)$r['id'];$r['text']=stt_read_text($r['text']);$deleted=!empty($r['deleted'])||!empty($r['hidden']);$own=(int)$r['uid']===$me;$event=null;if(!$peer&&isset($events[(int)$r['id']])){$event=stt_event_card($events[(int)$r['id']]);if($event===false)continue;}
  $rows[]=['id'=>(int)$r['id'],'uid'=>(int)$r['uid'],'name'=>(!(int)$r['uid'])?'STT Bot':($r['username']?:stt_t('text_deleted_member_471af1')),'nameHtml'=>(!(int)$r['uid'])?'STT Bot':stt_name_html($r),'event'=>$deleted?null:$event,'avatar'=>$r['avatar']??'','html'=>$deleted?'':stt_html($r['text']),'text'=>$deleted?'':$r['text'],'date'=>(int)$r['date'],'edited'=>(int)($r['modified']??0),'canEdit'=>!$deleted&&$own&&$me>0&&$event===null&&stt_write(),'deleted'=>$deleted,'canDelete'=>!$deleted&&($peer?$own:($own||stt_mod())),'reactions'=>[]];if(count($rows)>=50)break;}
@@ -41,6 +41,15 @@ function stt_conversations(){
 }
 function stt_boot(){
  global $cache,$mybb;$emotes=[];foreach((array)$cache->read('smilies')as$s){$code=explode('\n',str_replace("\r",'',(string)$s['find']))[0];$code=explode("\n",$code)[0];$src=str_replace('{theme}','images',(string)$s['image']);if(!preg_match('~^(?:https?://|[a-zA-Z0-9_./-]+$)~',$src))continue;if(!preg_match('~^https?://~',$src))$src=rtrim($mybb->settings['bburl'],'/').'/'.ltrim($src,'/');$emotes[]=['name'=>$s['name'],'code'=>$code,'src'=>$src];}return ['emotes'=>$emotes];
+}
+// Reconcile already loaded public history, including messages outside the latest page.
+// IDs are bounded and parsed as integers; never query private conversations here.
+function stt_removed_public($known){
+ global $db;if(!is_string($known)||strlen($known)>6000)return [];
+ $ids=[];foreach(array_slice(explode(',',$known),0,500)as$id){if(ctype_digit($id)&&(int)$id>0)$ids[]=(int)$id;}
+ $ids=array_unique($ids);if(!$ids)return [];
+ $q=$db->simple_select('stt_hidden','sid','sid IN ('.implode(',',$ids).')');$removed=[];
+ while($r=$db->fetch_array($q))$removed[]=(int)$r['sid'];return $removed;
 }
 function stt_send($peer,$text){
  global $db,$mybb;if(!stt_write())throw new RuntimeException(stt_t('text_you_cannot_post_in_this_chat_ae5bc7'),403);
@@ -58,7 +67,7 @@ function stt_send($peer,$text){
 function stt_dispatch($op,$in){
  global $db,$mybb;$me=(int)$mybb->user['uid'];$peer=max(0,(int)($in['peer']??0));$id=max(0,(int)($in['id']??0));
  if($op==='boot')return stt_boot();
- if($op==='load'){global $stt_next_before;$rows=stt_rows($peer,$in['before']??0);return ['messages'=>$rows,'cursor'=>$stt_next_before,'conversations'=>stt_conversations(),'time'=>time()];}
+ if($op==='load'){global $stt_next_before;$rows=stt_rows($peer,$in['before']??0);return ['messages'=>$rows,'removed'=>$peer?[]:stt_removed_public($in['known']??''),'cursor'=>$stt_next_before,'conversations'=>stt_conversations(),'time'=>time()];}
  if($op==='users'){$term=trim((string)($in['q']??''));if(!$me||mb_strlen($term)<2)return []; $q=$db->simple_select('users','uid,username,avatar,usergroup,displaygroup',"username LIKE '%".$db->escape_string($db->escape_string_like(mb_substr($term,0,80)))."%'",['limit'=>12,'order_by'=>'username']);$a=[];while($r=$db->fetch_array($q))$a[]=stt_user_data($r);return $a;}
  if($op==='send')return stt_send($peer,$in['text']??'');
  if($op==='edit')return stt_edit($peer,$id,$in['text']??'', $in['expected']??null);

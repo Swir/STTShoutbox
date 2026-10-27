@@ -1,4 +1,4 @@
-STTShoutbox 2.5.0 — SWIRTV TEAM
+STTShoutbox 2.5.1 — SWIRTV TEAM
 Open START-EN.html in your browser for the beginner guide.
 
 INSTALL
@@ -9,6 +9,12 @@ Back up your forum files and database first.
 2. Admin CP → Configuration → Plugins → STTShoutbox → Install & Activate.
 3. Click Appearance & setup. Save your preferences and
    open the forum homepage. No other shoutbox or bot account is needed.
+
+UPGRADE FROM 2.5.0
+Back up, replace all files from Upload and refresh the forum. No schema
+migration or reactivation is needed for 2.5.1. Do not uninstall.
+Public withdrawals now disappear without placeholders. Staff see a red x.
+Original records remain stored; this is not a database-erasure operation.
 
 UPGRADE FROM 2.0 / 2.1 / 2.2 / 2.3 / 2.4
 Back up, deactivate the plugin, upload ALL files from Upload, activate

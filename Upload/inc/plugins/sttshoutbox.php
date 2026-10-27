@@ -29,7 +29,7 @@ function sttshoutbox_info(){
   }
   $description.='</div></div>';
  }
- return ['name'=>'STTShoutbox','description'=>$description,'website'=>'https://swirtvteam.info/','author'=>'SWIRTV TEAM','authorsite'=>'https://swirtvteam.info/','version'=>'2.5.0','compatibility'=>'18*'];
+ return ['name'=>'STTShoutbox','description'=>$description,'website'=>'https://swirtvteam.info/','author'=>'SWIRTV TEAM','authorsite'=>'https://swirtvteam.info/','version'=>'2.5.1','compatibility'=>'18*'];
 }
 function sttshoutbox_preflight(){
  $issues=function_exists('stt_setup_requirements')?stt_setup_requirements():[(function_exists('stt_t')?stt_t('text_incomplete_package_upload_the_contents_of_upload_to__b1ec3c'):'Incomplete package. Upload the contents of Upload to the forum directory.')];
@@ -75,9 +75,9 @@ function sttshoutbox_render(){
  $appearance=stt_setup_appearance($mybb->settings);
  $templates->get('index');
  $templates->cache['index']=stt_setup_place($templates->cache['index']);
- $cfg=json_encode($appearance+['locale'=>stt_language()==='polish'?'pl-PL':'en-GB','i18n'=>stt_ui_dictionary(),'soundUrl'=>$base.'/jscripts/sttshoutbox/notify.wav?v=2.5.0','soundVolume'=>40,'endpoint'=>$base.'/xmlhttp.php?action=sttshoutbox','csrf'=>$mybb->post_code,'uid'=>(int)$mybb->user['uid'],'name'=>$mybb->user['username'],'write'=>stt_write(),'private'=>stt_pm_allowed(),'moderator'=>stt_mod(),'interval'=>max(5,(int)($mybb->settings['stt_interval']??7)),'limit'=>stt_limit(),'order'=>($mybb->settings['stt_order']??'newest'),'timeOffset'=>(float)($mybb->user['timezone']??$mybb->settings['timezoneoffset']??0)+(float)($mybb->user['dst']??$mybb->settings['dstcorrection']??0),'preview'=>!empty($mybb->settings['stt_preview']),'profile'=>$base.'/member.php?action=profile&uid='],JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT);
+ $cfg=json_encode($appearance+['locale'=>stt_language()==='polish'?'pl-PL':'en-GB','i18n'=>stt_ui_dictionary(),'soundUrl'=>$base.'/jscripts/sttshoutbox/notify.wav?v=2.5.1','soundVolume'=>40,'endpoint'=>$base.'/xmlhttp.php?action=sttshoutbox','csrf'=>$mybb->post_code,'uid'=>(int)$mybb->user['uid'],'name'=>$mybb->user['username'],'write'=>stt_write(),'private'=>stt_pm_allowed(),'moderator'=>stt_mod(),'interval'=>max(5,(int)($mybb->settings['stt_interval']??7)),'limit'=>stt_limit(),'order'=>($mybb->settings['stt_order']??'newest'),'timeOffset'=>(float)($mybb->user['timezone']??$mybb->settings['timezoneoffset']??0)+(float)($mybb->user['dst']??$mybb->settings['dstcorrection']??0),'preview'=>!empty($mybb->settings['stt_preview']),'profile'=>$base.'/member.php?action=profile&uid='],JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT);
  $url=htmlspecialchars_uni($base);
- $sttshoutbox='<link rel="stylesheet" href="'.$url.'/jscripts/sttshoutbox.css?v=2.5.0"><section id="stt-chat" aria-label="STTShoutbox"><div class="stt-loading">'.htmlspecialchars_uni(stt_t('bot_chat_loading')).'</div></section><script type="application/json" id="stt-config">'.$cfg.'</script><script defer src="'.$url.'/jscripts/sttshoutbox.js?v=2.5.0"></script>';
+ $sttshoutbox='<link rel="stylesheet" href="'.$url.'/jscripts/sttshoutbox.css?v=2.5.1"><section id="stt-chat" aria-label="STTShoutbox"><div class="stt-loading">'.htmlspecialchars_uni(stt_t('bot_chat_loading')).'</div></section><script type="application/json" id="stt-config">'.$cfg.'</script><script defer src="'.$url.'/jscripts/sttshoutbox.js?v=2.5.1"></script>';
 }
 function sttshoutbox_api(){
  global $mybb;

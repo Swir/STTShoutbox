@@ -1,4 +1,4 @@
-STTShoutbox 2.5.0 — SWIRTV TEAM
+STTShoutbox 2.5.1 — SWIRTV TEAM
 Otwórz START.html w przeglądarce — to krótki przewodnik dla początkujących.
 
 INSTALACJA W TRZECH KROKACH
@@ -22,6 +22,12 @@ Wysokość: 240 px = kompaktowy, 360 = wygodny, 480 = duży (zakres 180–600).
 Klasyczny STT zachowuje niebieski wygląd 2.1; kolor z palety dotyczy
 pozostałych trybów. Zmiany zobaczysz po odświeżeniu strony forum.
 Kolory nicków i emotikony są pobierane z ustawień forum.
+
+AKTUALIZACJA Z 2.5.0
+Zrób kopię, podmień wszystkie pliki z Upload i odśwież forum. Wersja 2.5.1
+nie wymaga migracji bazy ani ponownej aktywacji. Nie odinstalowuj wtyczki.
+Wycofane publiczne wpisy znikają bez etykiet; administracja i moderatorzy
+mają czerwony krzyżyk. Zapisy pozostają w bazie — to usunięcie z widoku.
 
 AKTUALIZACJA Z 2.0 / 2.1 / 2.2 / 2.3 / 2.4
 Zrób kopię. Dezaktywuj plugin (nie odinstalowuj), wgraj wszystkie pliki

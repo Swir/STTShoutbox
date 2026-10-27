@@ -325,3 +325,5 @@ $l['ui_sound_note'] = 'A gentle chime for new messages. History, your own messag
 $l['ui_sound_unavailable'] = 'Sound could not play. Try the sample again.';
 $l['ui_sound_enabled'] = 'Message sound';
 $l['ui_sound_close'] = 'Close sound settings';
+$l['ui_remove_public'] = 'Remove message';
+$l['ui_remove_public_confirm'] = 'Remove this message from the public chat? It will disappear for everyone without leaving a placeholder.';

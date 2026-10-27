@@ -2,7 +2,7 @@
 
 Samodzielny shoutbox dla **MyBB 1.8**, autorstwa **SWIRTV TEAM**, dostępny po **polsku i angielsku**.
 
-[English](README.md) · [Pobierz 2.5.0](https://github.com/Swir/STTShoutbox/releases/tag/v2.5.0) · [Pełna instrukcja](INSTALACJA.txt) · [Instrukcja bota](docs/BOT-AKTYWNOSCI.md)
+[English](README.md) · [Pobierz 2.5.1](https://github.com/Swir/STTShoutbox/releases/tag/v2.5.1) · [Pełna instrukcja](INSTALACJA.txt) · [Instrukcja bota](docs/BOT-AKTYWNOSCI.md)
 
 ![Polski interfejs z przykładowymi wiadomościami](docs/screenshots/chat-pl.png)
 
@@ -10,7 +10,7 @@ Samodzielny shoutbox dla **MyBB 1.8**, autorstwa **SWIRTV TEAM**, dostępny po *
 
 Najpierw zrób kopię plików i bazy forum.
 
-1. Pobierz `STTShoutbox-2.5.0.zip` z wydań i rozpakuj. Wgraj **zawartość folderu Upload** do katalogu MyBB, obok `index.php`. Scal katalogi `inc` i `jscripts`, także nowy folder dźwięku `jscripts/sttshoutbox`; nie usuwaj ich istniejącej zawartości.
+1. Pobierz `STTShoutbox-2.5.1.zip` z wydań i rozpakuj. Wgraj **zawartość folderu Upload** do katalogu MyBB, obok `index.php`. Scal katalogi `inc` i `jscripts`, także nowy folder dźwięku `jscripts/sttshoutbox`; nie usuwaj ich istniejącej zawartości.
 2. **ACP → Konfiguracja → Pluginy → STTShoutbox → Zainstaluj i aktywuj**.
 3. Kliknij **Wygląd i ustawienia**, wybierz wygląd i zapisz.
 
@@ -46,15 +46,23 @@ Domyślnie reguły obejmują odpowiedzi; możesz rozszerzyć je na nowe tematy. 
 
 Filtry dotyczą powiadomień bota. Posty forum, podziękowania, odsłanianie treści i historia rozmów pozostają zachowane. Szczegóły liczenia słów i działania historii znajdziesz w [instrukcji bota](docs/BOT-AKTYWNOSCI.md).
 
+## Usuwanie wiadomości publicznych
+
+Administratorzy, supermoderatorzy i moderatorzy przypisani do działów MyBB widzą czerwony **×** przy wiadomościach, także kartach bota. Po potwierdzeniu wpis znika wszystkim, bez napisu „Wiadomość została wycofana”. Inne otwarte shoutboxy odświeżają usunięcia przy kolejnym sprawdzeniu; bardzo długa wczytana historia jest sprawdzana partiami po 500 identyfikatorów. Zwykli użytkownicy mogą wycofywać tylko własne wpisy. Nadal obowiązują ograniczenia dostępu do czatu, blokady użytkowników i uprawnienia do pisania.
+
+Dotychczasowe wycofane wiadomości publiczne również znikają z widoku historii. Rozmowy prywatne zachowują dotychczasowe zasady i nie podlegają moderowaniu przez osoby spoza rozmowy. Usunięcie z widoku nie kasuje zapisów z bazy danych ani kopii zapasowych.
+
 ## Dźwięk wiadomości
 
 Paczka zawiera `Upload/jscripts/sttshoutbox/notify.wav` — krótki, własny sygnał z dwóch dźwięków, odtwarzany z Twojego forum. Nie trzeba szukać pliku ani podłączać zewnętrznego serwisu. Przycisk **♪** w nagłówku czatu włącza i wyłącza dźwięk, a obok otworzysz ustawienia głośności i odsłuch. Początkowo dźwięk jest wyłączony; wybór i głośność są zapamiętywane w bieżącej przeglądarce dla danego konta na forum.
 
 Przeglądarka wymaga kliknięcia, zanim dopuści dźwięk. Po ponownym otwarciu forum kliknij na stronie, aby zapamiętane ustawienie mogło odtwarzać powiadomienia. Historia, własne wiadomości i ogłoszenia bota aktywności nie uruchamiają dźwięku. Przy serii nowych wiadomości sygnał rozlega się najwyżej raz na trzy sekundy.
 
-## Aktualizacja z 2.0–2.4
+## Aktualizacja z 2.0–2.5.0
 
-Zrób kopię, **dezaktywuj** wtyczkę, wgraj wszystkie pliki z Upload, aktywuj ponownie i odśwież forum. Nie odinstalowuj przy aktualizacji. Pamiętaj o nowym pliku `jscripts/sttshoutbox/notify.wav`. Historia, dotychczasowe ustawienia i wybrany wygląd zostają zachowane. Przy aktualizacji z wersji starszej niż 2.4 dodawane są filtry z wartościami opisanymi powyżej. Sprawdź je w panelu **Bot aktywności**.
+Z **2.5.0**: zrób kopię, podmień pliki z folderu `Upload` i odśwież forum. Wersja 2.5.1 nie wymaga zmian w bazie ani ponownej aktywacji.
+
+Ze **starszych wersji**: zrób kopię, **dezaktywuj** wtyczkę, wgraj wszystkie pliki z Upload, aktywuj ponownie i odśwież forum. Nie odinstalowuj przy aktualizacji. Pamiętaj o nowym pliku `jscripts/sttshoutbox/notify.wav`. Historia, dotychczasowe ustawienia i wybrany wygląd zostają zachowane. Przy aktualizacji z wersji starszej niż 2.4 dodawane są filtry z wartościami opisanymi powyżej. Sprawdź je w panelu **Bot aktywności**.
 
 ## Wymagania i sprawdzenie
 

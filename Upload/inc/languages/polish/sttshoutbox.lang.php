@@ -325,3 +325,5 @@ $l['ui_sound_note'] = 'Delikatny sygnał nowych wiadomości. Historia, Twoje wpi
 $l['ui_sound_unavailable'] = 'Nie udało się odtworzyć dźwięku. Spróbuj ponownie odsłuchać.';
 $l['ui_sound_enabled'] = 'Dźwięk wiadomości';
 $l['ui_sound_close'] = 'Zamknij ustawienia dźwięku';
+$l['ui_remove_public'] = 'Usuń wiadomość';
+$l['ui_remove_public_confirm'] = 'Usunąć tę wiadomość z publicznego shoutboxa? Zniknie dla wszystkich bez pozostawiania pustego wpisu.';
