@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.2 — 2026-10-27
+
+- Show a smaller red × inside the message action bar on hover or keyboard focus, instead of permanently beside every message.
+- Put the own-message Edit button first and make it easier to spot.
+- Keep message controls usable on touch devices without requiring hover.
+
 ## 2.5.1 — 2026-10-27
 
 - Administrators, super moderators and assigned MyBB forum moderators get a red × button for public messages, with a translated accessible label and confirmation.

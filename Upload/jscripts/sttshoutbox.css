@@ -175,10 +175,12 @@
 #stt-chat[data-appearance="light"] .stt-sound-feedback.has-error{color:#9a3225}
 @media(max-width:500px){#stt-chat .stt-head{gap:4px}#stt-chat .stt-sound-settings{margin-left:-4px}#stt-chat .stt-sound-panel{top:36px}}
 
-/* A visible, keyboard-accessible moderation control in both colour schemes. */
-#stt-chat button.stt-remove{position:absolute;top:2px;right:4px;z-index:3;width:28px;min-height:28px;padding:0;color:#ff6b6b;font-size:23px;font-weight:700;line-height:28px;border-radius:4px}
+/* Compact controls share the hover/focus toolbar, with editing first. */
+#stt-chat .stt-message-actions{align-items:center}
+#stt-chat button.stt-edit{font-weight:700;color:#8bd1f5}
+#stt-chat[data-appearance="light"] button.stt-edit{color:#08649a}
+#stt-chat button.stt-remove{flex:0 0 18px;width:18px;min-height:18px;height:18px;padding:0;color:#ff6b6b;font-size:14px;font-weight:700;line-height:18px;border-radius:3px}
 #stt-chat button.stt-remove:hover:not(:disabled){background:#e5393526;color:#ff9999}
 #stt-chat[data-appearance="light"] button.stt-remove{color:#b4232c}
 #stt-chat[data-appearance="light"] button.stt-remove:hover:not(:disabled){color:#8c1420}
-#stt-chat .stt-has-remove .stt-body{padding-right:34px}
-#stt-chat .stt-has-remove .stt-message-actions{right:36px}
+@media(hover:none),(pointer:coarse){#stt-chat .stt-message-actions{position:static;opacity:1;pointer-events:auto;box-shadow:none;border:0;background:none;padding:1px 0}}

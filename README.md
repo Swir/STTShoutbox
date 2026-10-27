@@ -2,7 +2,7 @@
 
 An independent shoutbox for **MyBB 1.8**, built by **SWIRTV TEAM**. Public chat, private conversations, forum activity notifications and a beginner-friendly setup page — in **English and Polish**.
 
-[Polski / Polish](README.pl.md) · [Download 2.5.1](https://github.com/Swir/STTShoutbox/releases/tag/v2.5.1) · [Installation guide](INSTALL.txt) · [Activity bot guide](docs/ACTIVITY-BOT.md)
+[Polski / Polish](README.pl.md) · [Download 2.5.2](https://github.com/Swir/STTShoutbox/releases/tag/v2.5.2) · [Installation guide](INSTALL.txt) · [Activity bot guide](docs/ACTIVITY-BOT.md)
 
 ![English chat preview with demonstration messages](docs/screenshots/chat-en.png)
 
@@ -10,7 +10,7 @@ An independent shoutbox for **MyBB 1.8**, built by **SWIRTV TEAM**. Public chat,
 
 Back up your forum files and database first.
 
-1. Download the `STTShoutbox-2.5.1.zip` release asset and extract it. Upload the **contents** of `Upload` into the MyBB root directory, alongside `index.php`. Merge the `inc` and `jscripts` directories, including the new `jscripts/sttshoutbox` sound folder; do not delete their existing contents.
+1. Download the `STTShoutbox-2.5.2.zip` release asset and extract it. Upload the **contents** of `Upload` into the MyBB root directory, alongside `index.php`. Merge the `inc` and `jscripts` directories, including the new `jscripts/sttshoutbox` sound folder; do not delete their existing contents.
 2. Open **Admin CP → Configuration → Plugins → STTShoutbox → Install & Activate**.
 3. Click **Appearance & setup** beside the plugin. Choose the appearance, accent colour, height and message order, then save.
 
@@ -54,7 +54,7 @@ These rules affect bot notifications. Forum posts, thanks/unlock plugins, chat m
 
 ## Remove public messages
 
-Administrators, super moderators and assigned MyBB forum moderators see a red **×** beside public messages, including activity-bot cards. Confirm removal to make the message disappear for everyone, with no withdrawn-message placeholder. Other open chats update on their next poll; unusually large loaded histories are checked in batches of 500 IDs. Ordinary members can withdraw only their own messages. Existing chat access, blocked-user and posting restrictions still apply.
+Administrators, super moderators and assigned MyBB forum moderators see a small red **×** in the action bar when hovering over a public message, including activity-bot cards. The **Edit** button comes first for your own messages. Keyboard focus also reveals the controls; touch devices show them without requiring hover. Confirm removal to make the message disappear for everyone, with no withdrawn-message placeholder. Other open chats update on their next poll; unusually large loaded histories are checked in batches of 500 IDs. Ordinary members can withdraw only their own messages. Existing chat access, blocked-user and posting restrictions still apply.
 
 Old withdrawn public messages are also omitted from history. Private conversations keep their existing withdrawal behaviour and cannot be moderated by unrelated users. This hides records from the chat; it does not erase the original database records or backups.
 
@@ -64,9 +64,9 @@ The installation ZIP includes `Upload/jscripts/sttshoutbox/notify.wav`: an origi
 
 Browsers require a click before allowing audio. After reopening the forum, interact with the page to allow your saved preference to play notifications. Loading chat history, your own messages and activity-bot notices do not make a sound. A burst of incoming messages produces at most one notification every three seconds.
 
-## Upgrade from 2.0–2.5.0
+## Upgrade from 2.0–2.5.1
 
-From **2.5.0**, back up, replace the files from `Upload`, and refresh the forum. No database migration or reactivation is needed for 2.5.1.
+From **2.5.0 or 2.5.1**, back up, replace the files from `Upload`, and refresh the forum. No database migration or reactivation is needed for 2.5.2.
 
 From **older versions**, back up first. **Deactivate**, upload every file in `Upload`, then activate again and hard-refresh the forum. **Do not uninstall to update.** Include the new `jscripts/sttshoutbox/notify.wav` file. Existing conversation history, settings and chosen appearance are retained; fresh installations default to automatic appearance. Upgrades from versions before 2.4 add the filter defaults described above. Review them in **Activity bot** after updating.
 

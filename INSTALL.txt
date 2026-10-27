@@ -1,4 +1,4 @@
-STTShoutbox 2.5.1 — SWIRTV TEAM
+STTShoutbox 2.5.2 — SWIRTV TEAM
 Open START-EN.html in your browser for the beginner guide.
 
 INSTALL
@@ -10,9 +10,9 @@ Back up your forum files and database first.
 3. Click Appearance & setup. Save your preferences and
    open the forum homepage. No other shoutbox or bot account is needed.
 
-UPGRADE FROM 2.5.0
+UPGRADE FROM 2.5.0 OR 2.5.1
 Back up, replace all files from Upload and refresh the forum. No schema
-migration or reactivation is needed for 2.5.1. Do not uninstall.
+migration or reactivation is needed for 2.5.2. Do not uninstall.
 Public withdrawals now disappear without placeholders. Staff see a red x.
 Original records remain stored; this is not a database-erasure operation.
 

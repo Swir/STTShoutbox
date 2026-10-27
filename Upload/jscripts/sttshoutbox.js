@@ -214,8 +214,9 @@
    let time=node('time','',new Date((m.date+(cfg.timeOffset||0)*3600)*1000).toLocaleTimeString(cfg.locale||'en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'UTC'}));time.dateTime=new Date(m.date*1000).toISOString();meta.append(author,time);if(m.edited){const stamp=node('span','stt-edited',t("ui_edited_7a5e88"));stamp.title=t("ui_this_message_has_been_edited_237267");meta.append(stamp);}
    if(peer)meta.append(node('span','stt-private-label',t("ui_private_a23aa9")));if(mentionMine(m.text))meta.append(node('span','stt-mention-label',t("ui_you_were_mentioned_94e0c2")));
    const body=node('div','stt-body');if(m.event&&!m.deleted){row.classList.add('stt-bot-event');const tag=node('span','stt-event-tag',m.event.label);const link=node('a','stt-event-title',m.event.subject);link.href=safeURL(m.event.url);const details=node('span','stt-event-meta');const person=node('span','stt-event-author');person.innerHTML=m.event.authorHtml;details.append(person);if(m.event.forum)details.append(document.createTextNode(' · '+m.event.forum));body.append(tag,link,details);}else if(m.deleted){body.textContent=t("ui_this_message_has_been_withdrawn_4f8b52");body.classList.add('stt-deleted');}else{body.innerHTML=m.html;for(const a of body.querySelectorAll('a')){if(!safeURL(a.href)){a.replaceWith(document.createTextNode(a.textContent));}else{a.rel='noopener noreferrer';a.target='_blank';}}for(const a of body.querySelectorAll('a.mentionme_mention')){a.classList.add('stt-mention');a.removeAttribute('style');}}
-   let actions=node('div','stt-message-actions');if(!m.deleted&&cfg.write){if(!peer)for(const [kind,label]of Object.entries(rx)){let r=m.reactions.find(x=>x.kind===kind);let b=btn(label+(r?' '+r.count:''),'stt-reaction'+(r?.mine?' is-on':''),async()=>{try{await api('react',{id:m.id,kind},true);await load();}catch(e){tell(e.message);}},t("ui_reaction_e25678")+label);actions.append(b);}
-    if(m.canEdit)actions.append(btn(t("ui_edit_6ebdce"),'stt-small',()=>startEdit(m)));
+   let actions=node('div','stt-message-actions');if(!m.deleted&&cfg.write){
+    if(m.canEdit)actions.append(btn(t("ui_edit_6ebdce"),'stt-small stt-edit',()=>startEdit(m)));
+    if(!peer)for(const [kind,label]of Object.entries(rx)){let r=m.reactions.find(x=>x.kind===kind);let b=btn(label+(r?' '+r.count:''),'stt-reaction'+(r?.mine?' is-on':''),async()=>{try{await api('react',{id:m.id,kind},true);await load();}catch(e){tell(e.message);}},t("ui_reaction_e25678")+label);actions.append(b);}
     actions.append(btn(t("ui_reply_540892"),'stt-small',()=>{cancelEdit();selectedReply=m;reply.replaceChildren(node('span','', t("ui_replying_to_8151e0")+m.name+' · '+m.text.slice(0,90)),btn('×','stt-icon',clearReply));reply.hidden=false;input.focus();}));
     if(cfg.private&&m.uid!==cfg.uid)actions.append(btn(t("ui_private_ffd7ec"),'stt-small',()=>switchPeer(m.uid,m.name)));
     if(m.canDelete){const moderate=!peer&&cfg.moderator;const remove=btn(moderate?'×':t("ui_withdraw_af7e9b"),moderate?'stt-remove':'stt-small',async()=>{
@@ -223,7 +224,7 @@
      remove.disabled=true;try{await api('delete',{id:m.id,peer:dest},true);if(turn!==epoch||dest!==peer)return;
       if(!dest){publicRemoved.add(m.id);messages.delete(m.id);if(selectedEdit?.id===m.id)cancelEdit();if(selectedReply?.id===m.id)clearReply();render();}await load();
      }catch(e){if(turn===epoch)tell(e.message);}finally{remove.disabled=false;}
-    },moderate?t('ui_remove_public')+' #'+m.id:'');if(moderate){remove.setAttribute('aria-label',t('ui_remove_public')+' #'+m.id);row.classList.add('stt-has-remove');row.append(remove);}else actions.append(remove);}
+    },moderate?t('ui_remove_public')+' #'+m.id:'');if(moderate)remove.setAttribute('aria-label',t('ui_remove_public')+' #'+m.id);actions.append(remove);}
    }
    content.append(meta,body,actions);row.append(content);log.append(row);
   }
